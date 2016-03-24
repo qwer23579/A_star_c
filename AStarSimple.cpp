@@ -4,12 +4,12 @@
 #include "stdlib.h"
 #include "AStarSimple.h"
 
-int **MAP; //地图二级指针，相当于二维数组的数组名，用它来动态申请地图空间
+//int **MAP; //地图二级指针，相当于二维数组的数组名，用它来动态申请地图空间
 int map_lenx = 20,map_leny =20; //存放动态地图的行数和列数，默认是20*20的地图
 struct point start,end;
 Astack open,close;
 
-void init_map()//初始化地图默认生成20*20的地图，当map_lenx和map_leny值变化时，地图大小也会变
+void init_map(int** &MAP)//初始化地图默认生成20*20的地图，当map_lenx和map_leny值变化时，地图大小也会变
 { 
 	int t = 0;//用来生成随机数
 	int x,y;
@@ -165,7 +165,7 @@ point Astack::next_point(point m,int index)
 	{
 	case 0: {n.x = m.x,n.y = m.y+1;break;}//东
 	case 1: {n.x = m.x+1,n.y = m.y;break;}//南
-	case 2:{ n.x = m.x-1,n.y = m.y;break;}//西
+	case 2: {n.x = m.x-1,n.y = m.y;break;}//西
 	case 3: {n.x = m.x,n.y = m.y-1;break;}//北
 	}
 
@@ -173,7 +173,7 @@ point Astack::next_point(point m,int index)
 }
 
 //扫描最短路径
-int scan()
+int scan(int **MAP)
 {
 	open.push(start);//将开始节点压入开启列表
 	MAP[start.x][start.y] = 0;
@@ -184,7 +184,7 @@ int scan()
 	{
 		if (open.find_point(end)||open.next==NULL)//如果发现终点在开启列表的时候，找到了最短路径
 		{
-			show_map();//显示
+			show_map(MAP);//显示
 			if (open.next==NULL)//当开启列表为空时，代表没有路径可以到达终点
 			{
 				printf("地图不可到达\n");
@@ -211,7 +211,7 @@ int scan()
 
 }
 
-void show_map()//显示地图的函数
+void show_map(int **MAP)//显示地图的函数
 {
 
 	if (map_lenx>20||map_leny>20)//当迷宫地图行列大于20时，将屏幕尺寸加大为150*150的控制台窗口

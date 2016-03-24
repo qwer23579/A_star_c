@@ -15,7 +15,7 @@
 
 extern int map_lenx;
 extern int map_leny;
-extern int **MAP;
+int** MAP;
 extern struct point start,end;
 extern Astack open,close;
 
@@ -29,7 +29,7 @@ void main()
 		scanf("%d",&map_lenx);
 		scanf("%d",&map_leny);
 		printf("请输入地图起点x,y：(起点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
-		scanf("%d,%d",&start.x);
+		scanf("%d",&start.x);
 		scanf("%d",&start.y);
 		printf("请输入地图终点x,y：(终点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
 		scanf("%d",&end.x);
@@ -40,8 +40,8 @@ void main()
 			getchar();
 			continue;
 		}
-		init_map();//初始化地图
-		scan();//扫描路径
+		init_map(MAP);//初始化地图
+		scan(MAP);//扫描路径
 		open.next = NULL;//置空开启列表和关闭列表
 		close.next = NULL;
 	}

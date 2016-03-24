@@ -1,19 +1,19 @@
 #pragma once
 
-void init_map();
-int  scan();
-void show_map();//显示地图的函数
+void init_map(int** &MAP);//初始化地图
+int  scan(int **MAP);//扫描最短路径
+void show_map(int **MAP);//显示地图的函数
 
-struct node//基本节点
+struct node//基本节点，包含评估值
 {
 	int  x,y;//记录在地图中的xy坐标
 	int f,g,h;//节点评估值f = 父节点到当前节点的代价g+当前节点到终点的预估代价h，即f=g+h
 };
 
-struct point
+struct point//节点坐标结构体
 {
 	int x,y;//坐标
-};//节点坐标结构体，注意，在此处已生成了开始start，end
+};
 
 class Astack
 {
@@ -22,16 +22,15 @@ public:
 	Astack *next;//指向下一个节点的指针
 	Astack *futher;//指向父节点，这个非常重要，因为当扫描终点的时候，通过不停反向查询父节点就可以得到了最短路径
 
-
 public:
 	Astack(void);
 	~Astack(void);
-	int conpute_F(Astack * futher,Astack *p);
-	int push(point n,Astack *F = NULL);
-	Astack * find_point(point n);
-	Astack *get_Fmin();
-	int delete_point(Astack *n);//传入要删除的节点地址
-	point next_point(point m,int index = 0);
+	int conpute_F(Astack * futher,Astack *p);//计算一个节点的F值
+	int push(point n,Astack *F = NULL);//将一个节点加入栈中
+	Astack * find_point(point n);//查找栈中是否存在以n为坐标的节点
+	Astack *get_Fmin();//得到一个f最小的节点，并返回这个节点的地址
+	int delete_point(Astack *n);//删除栈中一个节点
+	point next_point(point m,int index = 0);//通过当前坐标m、和index所指示的方向计算下一个节点坐标
 
 };
 
