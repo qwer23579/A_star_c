@@ -1,7 +1,7 @@
 ﻿// A_star_c0322.cpp : 定义控制台应用程序的入口点。
-//
 
 #include "stdafx.h"
+
 
 // 本程序使用A*算法编写，在VS系列开发平台编写，可以兼容VC系列开发软件，不可在TC系列开发平台上运行
 	//A*算法是一种静态路网中最高效的搜索最短路径的算法
@@ -11,7 +11,43 @@
 #include "stdio.h"
 #include "time.h"
 #include "stdlib.h"
+#include "AStarSimple.h"
 
+extern int map_lenx;
+extern int map_leny;
+extern int **MAP;
+extern struct point start,end;
+extern Astack open,close;
+
+
+void main()
+{
+	while (true)
+	{
+		//srand(time(NULL));//置随机函数种子,屏蔽后每次地图不变
+		printf("A星算法静态路网最短路径！！！\n请输入地图行数，列数：(地图范围最好在3*3-100*100内)\n");
+		scanf("%d",&map_lenx);
+		scanf("%d",&map_leny);
+		printf("请输入地图起点x,y：(起点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
+		scanf("%d,%d",&start.x);
+		scanf("%d",&start.y);
+		printf("请输入地图终点x,y：(终点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
+		scanf("%d",&end.x);
+		scanf("%d",&end.y);
+		if (start.x>map_lenx-1||start.y>map_leny-1||end.x>map_lenx-1||end.y>map_leny-1)
+		{
+			printf("起点或终点已在地图外，无法寻路!!!\n按任意键继续....\n");
+			getchar();
+			continue;
+		}
+		init_map();//初始化地图
+		scan();//扫描路径
+		open.next = NULL;//置空开启列表和关闭列表
+		close.next = NULL;
+	}
+}
+
+/*
 void show_map();
 
 int **MAP; //地图二级指针，相当于二维数组的数组名，用它来动态申请地图空间
@@ -286,7 +322,6 @@ void show_map()//显示地图的函数
 	}
 
 }
-
 void main()
 {	
 	while (true)
@@ -313,3 +348,4 @@ void main()
 		close.next = NULL;
 	}
 }
+*/
