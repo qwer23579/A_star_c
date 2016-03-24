@@ -13,11 +13,11 @@
 #include "stdlib.h"
 #include "AStarSimple.h"
 
-extern int map_lenx;
-extern int map_leny;
+int map_lenx = 20;
+int map_leny = 20;
 int** MAP;
-extern struct point start,end;
-extern Astack open,close;
+struct point start,end;
+Astack open,close;
 
 
 void main()
@@ -40,8 +40,8 @@ void main()
 			getchar();
 			continue;
 		}
-		init_map(MAP);//初始化地图
-		scan(MAP);//扫描路径
+		MAP = init_map(map_lenx,map_leny);//初始化地图
+		scan(MAP,map_lenx,map_leny,start,end,open,close);//扫描路径
 		open.next = NULL;//置空开启列表和关闭列表
 		close.next = NULL;
 	}

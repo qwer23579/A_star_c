@@ -1,8 +1,9 @@
 #pragma once
+class Astack;
 
-void init_map(int** &MAP);//初始化地图
-int  scan(int **MAP);//扫描最短路径
-void show_map(int **MAP);//显示地图的函数
+int** init_map(int map_lenx,int map_leny);//初始化地图
+int  scan(int **MAP,int map_lenx,int map_leny,struct point start,struct point end,Astack open,Astack close);//扫描最短路径
+void show_map(int **MAP,int map_lenx,int map_leny,struct point start,struct point end, Astack open,Astack close);//显示地图的函数
 
 struct node//基本节点，包含评估值
 {
@@ -25,8 +26,8 @@ public:
 public:
 	Astack(void);
 	~Astack(void);
-	int conpute_F(Astack * futher,Astack *p);//计算一个节点的F值
-	int push(point n,Astack *F = NULL);//将一个节点加入栈中
+	int conpute_F(Astack * futher,Astack *p,struct point start,struct point end);//计算一个节点的F值
+	int push(struct point start,struct point end,point n,Astack *F = NULL);//将一个节点加入栈中
 	Astack * find_point(point n);//查找栈中是否存在以n为坐标的节点
 	Astack *get_Fmin();//得到一个f最小的节点，并返回这个节点的地址
 	int delete_point(Astack *n);//删除栈中一个节点

@@ -5,15 +5,15 @@
 #include "AStarSimple.h"
 
 //int **MAP; //地图二级指针，相当于二维数组的数组名，用它来动态申请地图空间
-int map_lenx = 20,map_leny =20; //存放动态地图的行数和列数，默认是20*20的地图
-struct point start,end;
-Astack open,close;
+//int map_lenx = 20,map_leny =20; //存放动态地图的行数和列数，默认是20*20的地图
+//struct point start,end;
+//Astack open,close;
 
-void init_map(int** &MAP)//初始化地图默认生成20*20的地图，当map_lenx和map_leny值变化时，地图大小也会变
+int** init_map(int map_lenx,int map_leny)//初始化地图默认生成20*20的地图，当map_lenx和map_leny值变化时，地图大小也会变
 { 
 	int t = 0;//用来生成随机数
 	int x,y;
-	MAP = (int **)malloc(sizeof(int *)*map_lenx);//动态申请map_lenx个一维数组，并赋值给MAP
+	int **MAP = (int **)malloc(sizeof(int *)*map_lenx);//动态申请map_lenx个一维数组，并赋值给MAP
 	for (x = 0 ; x<map_lenx;x++)//对于每个一维数组都要申请map_leny个内存空间
 	{
 		MAP[x] = (int *)malloc(sizeof(int )*map_leny);
@@ -45,6 +45,7 @@ void init_map(int** &MAP)//初始化地图默认生成20*20的地图，当map_lenx和map_leny值
 		MAP[0][x] = 1;
 		MAP[map_lenx-1][x] = 1;
 	}
+	return MAP;
 }
 
 Astack::Astack(void)
@@ -57,7 +58,7 @@ Astack::~Astack(void)
 {
 }
 
-int Astack::conpute_F(Astack * futher,Astack *p)
+int Astack::conpute_F(Astack * futher,Astack *p,struct point start,struct point end)
 {
 	if (p->data.x==start.x&&p->data.y==start.y||futher==NULL)//如果父亲节点为空，或当前节点为起点
 	{
@@ -75,13 +76,13 @@ int Astack::conpute_F(Astack * futher,Astack *p)
 
 }
 
-int Astack::push(point n,Astack *F)//F为父节点默认为空，这只是习惯问题//插入头结点之后
+int Astack::push(struct point start,struct point end,point n,Astack *F)//F为父节点默认为空，这只是习惯问题//插入头结点之后
 {
 	Astack * p  = (Astack *)malloc(sizeof(Astack));//申请一个结构体空间
 	Astack *q = NULL;
 	p->data.x = n.x;//加入坐标值
 	p->data.y = n.y;
-	conpute_F(F,p);//根据父节点F计算p节点坐标为n.x和n.y的F值
+	conpute_F(F,p,start,end);//根据父节点F计算p节点坐标为n.x和n.y的F值
 	p->futher = F;//反指父节点，这一点非常重要，重要，重要
 	if (next==NULL)//下面是使用前插法进行链表的连接
 	{
@@ -173,9 +174,9 @@ point Astack::next_point(point m,int index)
 }
 
 //扫描最短路径
-int scan(int **MAP)
+int scan(int **MAP,int map_lenx,int map_leny,struct point start,struct point end,Astack open,Astack close)
 {
-	open.push(start);//将开始节点压入开启列表
+	open.push(start,end,start);//将开始节点压入开启列表
 	MAP[start.x][start.y] = 0;
 	MAP[end.x][end.y] = 0;
 	Astack * p  = open.get_Fmin(),*q = NULL;//得到open列表中F值最低的节点
@@ -184,7 +185,7 @@ int scan(int **MAP)
 	{
 		if (open.find_point(end)||open.next==NULL)//如果发现终点在开启列表的时候，找到了最短路径
 		{
-			show_map(MAP);//显示
+			show_map(MAP, map_lenx, map_leny, start, end,open,close);//显示
 			if (open.next==NULL)//当开启列表为空时，代表没有路径可以到达终点
 			{
 				printf("地图不可到达\n");
@@ -199,19 +200,19 @@ int scan(int **MAP)
 			n= open.next_point(n,x);//根据x指示的方向得到下一个扫描点的坐标
 			if (MAP[n.x][n.y]==0&&!open.find_point(n)&&!close.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
 			{
-				open.push(n,p);//加入开启列表
+				open.push(start,end,n,p);//加入开启列表
 			}
 		}
 		n.x = p->data.x;//将n的坐标还原为父节点
 		n.y = p->data.y;
-		close.push(n);//将父节点加入到关闭列表中
+		close.push(start,end,n);//将父节点加入到关闭列表中
 		open.delete_point(p);//在开启列表删除父节点
 		p  = open.get_Fmin();//重新得到open列表中F值最低的节点
 	}
 
 }
 
-void show_map(int **MAP)//显示地图的函数
+void show_map(int **MAP,int map_lenx,int map_leny,struct point start,struct point end,Astack open,Astack close)//显示地图的函数
 {
 
 	if (map_lenx>20||map_leny>20)//当迷宫地图行列大于20时，将屏幕尺寸加大为150*150的控制台窗口
