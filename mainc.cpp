@@ -2,7 +2,6 @@
 
 #include "stdafx.h"
 
-
 // 本程序使用A*算法编写，在VS系列开发平台编写，可以兼容VC系列开发软件，不可在TC系列开发平台上运行
 	//A*算法是一种静态路网中最高效的搜索最短路径的算法
 	//核心思想是：启发式搜索，最最核心的是估价函数F（评估值） = G（父节点到自己的代价）+H（自己到终点的理论距离）
@@ -13,18 +12,17 @@
 #include "stdlib.h"
 #include "AStarSimple.h"
 
-int map_lenx = 20;
-int map_leny = 20;
-int** MAP;
-struct point start,end;
-Astack open,close;
-
-
 void main()
 {
 	while (true)
 	{
 		//srand(time(NULL));//置随机函数种子,屏蔽后每次地图不变
+
+		int map_lenx = 20;
+		int map_leny = 20;
+		struct point start,end;
+		Astack open,close;
+
 		printf("A星算法静态路网最短路径！！！\n请输入地图行数，列数：(地图范围最好在3*3-100*100内)\n");
 		scanf("%d",&map_lenx);
 		scanf("%d",&map_leny);
@@ -40,8 +38,9 @@ void main()
 			getchar();
 			continue;
 		}
-		MAP = init_map(map_lenx,map_leny);//初始化地图
-		scan(MAP,map_lenx,map_leny,start,end,open,close);//扫描路径
+
+		AStarMap A_MAP(map_lenx,map_lenx,start,end);//新建地图
+		scan(A_MAP,open,close);//扫描路径
 		open.next = NULL;//置空开启列表和关闭列表
 		close.next = NULL;
 	}
