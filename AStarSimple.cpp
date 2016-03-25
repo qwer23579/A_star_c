@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "AStarSimple.h"
 
 
@@ -11,36 +11,36 @@ Astack::Astack(void)
 Astack::~Astack(void)
 {
 }
-//Ö»¼ÆËãÉÏÏÂ×óÓÒµÄ·½°¸
+//åªè®¡ç®—ä¸Šä¸‹å·¦å³çš„æ–¹æ¡ˆ
 int Astack::conpute_F(const point & start,const point & end,Astack *p,Astack * futher)
 {
-	if (p->data.x==start.x&&p->data.y==start.y||futher==NULL)//Èç¹û¸¸Ç×½ÚµãÎª¿Õ£¬»òµ±Ç°½ÚµãÎªÆğµã
+	if (p->data.x==start.x&&p->data.y==start.y||futher==NULL)//å¦‚æœçˆ¶äº²èŠ‚ç‚¹ä¸ºç©ºï¼Œæˆ–å½“å‰èŠ‚ç‚¹ä¸ºèµ·ç‚¹
 	{
 		p->data.g = 0;
-		p->data.h = 0;//½«f£¬gÖµÖÃ0£¬¶øhÖµµÃ»°£¬ÒòÎªÓÀÔ¶²»»áÊ¹ÓÃµ½£¬ËùÒÔÊÇÊ²Ã´Öµ²»ËùÎ½
+		p->data.h = 0;//å°†fï¼Œgå€¼ç½®0ï¼Œè€Œhå€¼å¾—è¯ï¼Œå› ä¸ºæ°¸è¿œä¸ä¼šä½¿ç”¨åˆ°ï¼Œæ‰€ä»¥æ˜¯ä»€ä¹ˆå€¼ä¸æ‰€è°“
 		p->data.f =0;
-		return 1;//·µ»ØÖµÎÊÌâ
+		return 1;//è¿”å›å€¼é—®é¢˜
 	}
 	int G = (abs(p->data.x - start.x) + abs(p->data.x - start.y)) == 2 ? VertV : TiltV;
-	p->data.g = futher->data.g + G;//µ±Ç°½ÚµãµÄgÖµ×Ü±È¸¸½ÚµãµÄgÖµ´óG£¬ÒòÎªËûÃÇÏà¾àÒ»¸ö¾àÀë
-	p->data.h =VertV*abs(end.x - p->data.x)+VertV*abs(end.y-p->data.y);//Ô¤¹À´ú¼ÛhÊÇ¸ù¾İ¶ÔX£¬Y×ø±êÏà¼õµÄ¾ø¶ÔÖµÏà¼ÓµÃµ½µÄ
-	//Í¬Ê±ÕâÒ²ÊÇÆô·¢Ê½ËÑË÷µÄ¹Ø¼ü£¬¶ÔÓÚ¹À¼Ûº¯ÊıµÄÑ¡È¡ÄØ£¬»¹ÓĞºÜ¶àµÄ·½·¨
-	p->data.f =p->data.g+p->data.h;//½«Á½¸öÖµh£¬g¼ÓÆğÀ´µÃµ½±¾½ÚµãµÄÆÀ¹ÀÖµf
+	p->data.g = futher->data.g + G;//å½“å‰èŠ‚ç‚¹çš„gå€¼æ€»æ¯”çˆ¶èŠ‚ç‚¹çš„gå€¼å¤§Gï¼Œå› ä¸ºä»–ä»¬ç›¸è·ä¸€ä¸ªè·ç¦»
+	p->data.h =VertV*abs(end.x - p->data.x)+VertV*abs(end.y-p->data.y);//é¢„ä¼°ä»£ä»·hæ˜¯æ ¹æ®å¯¹Xï¼ŒYåæ ‡ç›¸å‡çš„ç»å¯¹å€¼ç›¸åŠ å¾—åˆ°çš„
+	//åŒæ—¶è¿™ä¹Ÿæ˜¯å¯å‘å¼æœç´¢çš„å…³é”®ï¼Œå¯¹äºä¼°ä»·å‡½æ•°çš„é€‰å–å‘¢ï¼Œè¿˜æœ‰å¾ˆå¤šçš„æ–¹æ³•
+	p->data.f =p->data.g+p->data.h;//å°†ä¸¤ä¸ªå€¼hï¼ŒgåŠ èµ·æ¥å¾—åˆ°æœ¬èŠ‚ç‚¹çš„è¯„ä¼°å€¼f
 
-	return p->data.f;//³É¹¦·µ»Ø
+	return p->data.f;//æˆåŠŸè¿”å›
 
 }
 
-int Astack::push(const point & start,const point & end,const point & point_n,Astack *F)//FÎª¸¸½ÚµãÄ¬ÈÏÎª¿Õ£¬ÕâÖ»ÊÇÏ°¹ßÎÊÌâ//²åÈëÍ·½áµãÖ®ºó
+int Astack::push(const point & start,const point & end,const point & point_n,Astack *F)//Fä¸ºçˆ¶èŠ‚ç‚¹é»˜è®¤ä¸ºç©ºï¼Œè¿™åªæ˜¯ä¹ æƒ¯é—®é¢˜//æ’å…¥å¤´ç»“ç‚¹ä¹‹å
 {
-	//Astack * p  = (Astack *)malloc(sizeof(Astack));//ÉêÇëÒ»¸ö½á¹¹Ìå¿Õ¼ä
+	//Astack * p  = (Astack *)malloc(sizeof(Astack));//ç”³è¯·ä¸€ä¸ªç»“æ„ä½“ç©ºé—´
 	Astack * p  = new Astack;
 	Astack *q = NULL;
-	p->data.x = point_n.x;//¼ÓÈë×ø±êÖµ
+	p->data.x = point_n.x;//åŠ å…¥åæ ‡å€¼
 	p->data.y = point_n.y;
-	conpute_F(start,end,p,F);//¸ù¾İ¸¸½ÚµãF¼ÆËãp½Úµã×ø±êÎªn.xºÍn.yµÄFÖµ
-	p->futher = F;//·´Ö¸¸¸½Úµã£¬ÕâÒ»µã·Ç³£ÖØÒª£¬ÖØÒª£¬ÖØÒª
-	if (next==NULL)//ÏÂÃæÊÇÊ¹ÓÃÇ°²å·¨½øĞĞÁ´±íµÄÁ¬½Ó
+	conpute_F(start,end,p,F);//æ ¹æ®çˆ¶èŠ‚ç‚¹Fè®¡ç®—pèŠ‚ç‚¹åæ ‡ä¸ºn.xå’Œn.yçš„Få€¼
+	p->futher = F;//åæŒ‡çˆ¶èŠ‚ç‚¹ï¼Œè¿™ä¸€ç‚¹éå¸¸é‡è¦ï¼Œé‡è¦ï¼Œé‡è¦
+	if (next==NULL)//ä¸‹é¢æ˜¯ä½¿ç”¨å‰æ’æ³•è¿›è¡Œé“¾è¡¨çš„è¿æ¥
 	{
 		next = p;
 		p->next = NULL;
@@ -52,27 +52,27 @@ int Astack::push(const point & start,const point & end,const point & point_n,Ast
 		p->next = q;
 	}
 
-	return 1;//³É¹¦·µ»Ø
+	return 1;//æˆåŠŸè¿”å›
 
 }
 
 Astack *Astack::find_point(const point & point_n)
 {
 	Astack * p = next;
-	while (p)//Ñ­»·Ò»Ö±µ½Õ»µÄ×îºó
+	while (p)//å¾ªç¯ä¸€ç›´åˆ°æ ˆçš„æœ€å
 	{
-		if (p->data.x==point_n.x&&p->data.y==point_n.y)//Èç¹ûÏàµÈ£¬¾Í´æÔÚ
+		if (p->data.x==point_n.x&&p->data.y==point_n.y)//å¦‚æœç›¸ç­‰ï¼Œå°±å­˜åœ¨
 		{
-			return p;//·µ»Ø²éÑ¯´úÂë1,´ú±íÕ»ÖĞ´æÔÚÁËÕâÑùµÄ½Úµã
+			return p;//è¿”å›æŸ¥è¯¢ä»£ç 1,ä»£è¡¨æ ˆä¸­å­˜åœ¨äº†è¿™æ ·çš„èŠ‚ç‚¹
 		}
 		p = p->next;
 	}
-	return NULL;//·µ»Ø²éÑ¯´úÂë0£¬´ú±í²»´æÔÚÒÔnÎª×ø±êµÄ½Úµã
+	return NULL;//è¿”å›æŸ¥è¯¢ä»£ç 0ï¼Œä»£è¡¨ä¸å­˜åœ¨ä»¥nä¸ºåæ ‡çš„èŠ‚ç‚¹
 }
 
 Astack *Astack::get_Fmin()
 {
-	int f = 32500;//ÉèÖÃÒ»¸ö¼«´óÊı£¬µ±×÷f£¬ÔÚÕ»ÖĞ£¬Ö»Òª±ÈËûĞ¡£¬¾Í¼ÇÂ¼Õ»ÖĞµÄÄÇ¸ö½ÚµãµÄÎ»ÖÃ
+	int f = 32500;//è®¾ç½®ä¸€ä¸ªæå¤§æ•°ï¼Œå½“ä½œfï¼Œåœ¨æ ˆä¸­ï¼Œåªè¦æ¯”ä»–å°ï¼Œå°±è®°å½•æ ˆä¸­çš„é‚£ä¸ªèŠ‚ç‚¹çš„ä½ç½®
 	Astack * p = next,*q = NULL ;
 	while (p)
 	{
@@ -83,42 +83,42 @@ Astack *Astack::get_Fmin()
 		}
 		p = p->next;
 	}
-	return q;//·µ»ØÕÒµ½µÄ½ÚµãµÄµØÖ·
+	return q;//è¿”å›æ‰¾åˆ°çš„èŠ‚ç‚¹çš„åœ°å€
 }
 
-int Astack::delete_point(Astack *Astack_p)//´«ÈëÒªÉ¾³ıµÄ½ÚµãµØÖ·
+int Astack::delete_point(Astack *Astack_p)//ä¼ å…¥è¦åˆ é™¤çš„èŠ‚ç‚¹åœ°å€
 {
 	int index = 0;
-	Astack *tempA = next;//wang£ºÁÙÊ±±äÁ¿
+	Astack *tempA = next;//wangï¼šä¸´æ—¶å˜é‡
 	Astack * p = next;//,*q = next;
-	if (p->next==NULL)//Ö»ÓĞÒ»¸ö½ÚµãÊ±
+	if (p->next==NULL)//åªæœ‰ä¸€ä¸ªèŠ‚ç‚¹æ—¶
 	{
 		
-		p = NULL;//½«Õ»ÖÃ¿Õ
+		p = NULL;//å°†æ ˆç½®ç©º
 		//delete p;//wang
-		return 0;//Õ»¿ÕÁË
+		return 0;//æ ˆç©ºäº†
 	}
-	//wang: ±£Ö¤ÒªÉ¾³ıµÄµãµÄÇ°½ÚµãÒÑÖª
-	if (p->data.x==Astack_p->data.x&&p->data.y==Astack_p->data.y)//µÚÒ»¸ö½Úµã¾ÍÊÇÒªÉ¾³ıµÄ½Úµã
+	//wang: ä¿è¯è¦åˆ é™¤çš„ç‚¹çš„å‰èŠ‚ç‚¹å·²çŸ¥
+	if (p->data.x==Astack_p->data.x&&p->data.y==Astack_p->data.y)//ç¬¬ä¸€ä¸ªèŠ‚ç‚¹å°±æ˜¯è¦åˆ é™¤çš„èŠ‚ç‚¹
 	{
-		next = next->next;//Ö±½ÓÖ¸ÏòµÚ¶ş¸ö½Úµã
-		//delete tempA;//wang:ÊÍ·ÅÄÚ´æ
+		next = next->next;//ç›´æ¥æŒ‡å‘ç¬¬äºŒä¸ªèŠ‚ç‚¹
+		//delete tempA;//wang:é‡Šæ”¾å†…å­˜
 		return 1;
 	}
-	p = p->next;//pÖ¸ÏòÏÂÒ»¸ö½Úµã£¬¶ø´ËÊ±q\ tempAÊÇÖ¸ÏòpµÄ
+	p = p->next;//pæŒ‡å‘ä¸‹ä¸€ä¸ªèŠ‚ç‚¹ï¼Œè€Œæ­¤æ—¶q\ tempAæ˜¯æŒ‡å‘pçš„
 
 	while (p)
 	{
-		if (p->data.x==Astack_p->data.x&&p->data.y==Astack_p->data.y)//´æÔÚ
+		if (p->data.x==Astack_p->data.x&&p->data.y==Astack_p->data.y)//å­˜åœ¨
 		{
-			tempA->next = p->next;//Ê¹ÓÃqÖ±½ÓÖ¸ÏòpµÄÏÂÒ»¸ö½Úµã£¬´ïµ½É¾³ıµÄÄ¿µÄ
+			tempA->next = p->next;//ä½¿ç”¨qç›´æ¥æŒ‡å‘pçš„ä¸‹ä¸€ä¸ªèŠ‚ç‚¹ï¼Œè¾¾åˆ°åˆ é™¤çš„ç›®çš„
 			//delete p;
-			return index;//·µ»ØÉ¾³ıµÄÎ»ÖÃ
+			return index;//è¿”å›åˆ é™¤çš„ä½ç½®
 		}
 		tempA = p;
 		p = p->next;
 	}
-	return -1;//·µ»Ø´íÎó£¬ÁĞ±íÖĞ²»´æÔÚÕâ¸ö½Úµã
+	return -1;//è¿”å›é”™è¯¯ï¼Œåˆ—è¡¨ä¸­ä¸å­˜åœ¨è¿™ä¸ªèŠ‚ç‚¹
 }
 
 point Astack::next_point(const point & point_n,int index)
@@ -126,113 +126,111 @@ point Astack::next_point(const point & point_n,int index)
 	point near_n;
 	switch (index)
 	{
-		case 0: {near_n.x = point_n.x  ,near_n.y = point_n.y+1;break;}//¶«
-		case 1: {near_n.x = point_n.x+1,near_n.y = point_n.y  ;break;}//ÄÏ
-		case 2: {near_n.x = point_n.x-1,near_n.y = point_n.y  ;break;}//wang:±±
-		case 3: {near_n.x = point_n.x  ,near_n.y = point_n.y-1;break;}//wang:Î÷
-		case 4: {near_n.x = point_n.x+1,near_n.y = point_n.y+1;break;}//¶«ÄÏ
-		case 5: {near_n.x = point_n.x-1,near_n.y = point_n.y+1;break;}//¶«±±
-		case 6: {near_n.x = point_n.x+1,near_n.y = point_n.y-1;break;}//Î÷ÄÏ
-		case 7: {near_n.x = point_n.x-1,near_n.y = point_n.y-1;break;}//Î÷±±
+		case 0: {near_n.x = point_n.x  ,near_n.y = point_n.y+1;break;}//ä¸œ
+		case 1: {near_n.x = point_n.x+1,near_n.y = point_n.y  ;break;}//å—
+		case 2: {near_n.x = point_n.x-1,near_n.y = point_n.y  ;break;}//wang:åŒ—
+		case 3: {near_n.x = point_n.x  ,near_n.y = point_n.y-1;break;}//wang:è¥¿
+		case 4: {near_n.x = point_n.x+1,near_n.y = point_n.y+1;break;}//ä¸œå—
+		case 5: {near_n.x = point_n.x-1,near_n.y = point_n.y+1;break;}//ä¸œåŒ—
+		case 6: {near_n.x = point_n.x+1,near_n.y = point_n.y-1;break;}//è¥¿å—
+		case 7: {near_n.x = point_n.x-1,near_n.y = point_n.y-1;break;}//è¥¿åŒ—
 
 	}
-	return near_n;	//·µ»ØÉú³ÉµÄ½Úµã
+	return near_n;	//è¿”å›ç”Ÿæˆçš„èŠ‚ç‚¹
 }
 
-//É¨Ãè×î¶ÌÂ·¾¶
+//æ‰«ææœ€çŸ­è·¯å¾„
 int scan(AStarMap & A_map,Astack & open,Astack & close)
 {
-	open.push(A_map.start,A_map.end,A_map.start);//½«¿ªÊ¼½ÚµãÑ¹Èë¿ªÆôÁĞ±í
+	open.push(A_map.start,A_map.end,A_map.start);//å°†å¼€å§‹èŠ‚ç‚¹å‹å…¥å¼€å¯åˆ—è¡¨
 	A_map.map[A_map.start.x][A_map.start.y] = 0;
 	A_map.map[A_map.end.x][A_map.end.y] = 0;
-	Astack * p  = open.get_Fmin(),*q = NULL;//µÃµ½openÁĞ±íÖĞFÖµ×îµÍµÄ½Úµã
+	Astack * p  = open.get_Fmin(),*q = NULL;//å¾—åˆ°openåˆ—è¡¨ä¸­Få€¼æœ€ä½çš„èŠ‚ç‚¹
 	point n;
-	while (true)//½øÈëËÀÑ­»·²éÕÒÂ·¾¶
+	while (true)//è¿›å…¥æ­»å¾ªç¯æŸ¥æ‰¾è·¯å¾„
 	{
-		if (open.find_point(A_map.end)||open.next==NULL)//Èç¹û·¢ÏÖÖÕµãÔÚ¿ªÆôÁĞ±íµÄÊ±ºò£¬ÕÒµ½ÁË×î¶ÌÂ·¾¶
+		if (open.find_point(A_map.end)||open.next==NULL)//å¦‚æœå‘ç°ç»ˆç‚¹åœ¨å¼€å¯åˆ—è¡¨çš„æ—¶å€™ï¼Œæ‰¾åˆ°äº†æœ€çŸ­è·¯å¾„
 		{
-			show_map(A_map,open,close);//ÏÔÊ¾
-			if (open.next==NULL)//µ±¿ªÆôÁĞ±íÎª¿ÕÊ±£¬´ú±íÃ»ÓĞÂ·¾¶¿ÉÒÔµ½´ïÖÕµã
+			show_map(A_map,open,close);//æ˜¾ç¤º
+			if (open.next==NULL)//å½“å¼€å¯åˆ—è¡¨ä¸ºç©ºæ—¶ï¼Œä»£è¡¨æ²¡æœ‰è·¯å¾„å¯ä»¥åˆ°è¾¾ç»ˆç‚¹
 			{
-				printf("µØÍ¼²»¿Éµ½´ï\n");//Wang£ºÈôÓĞÇÒÖ»ÓĞÒ»ÌõÂ·¾¶ÄØ£¿
+				printf("åœ°å›¾ä¸å¯åˆ°è¾¾\n");//Wangï¼šè‹¥æœ‰ä¸”åªæœ‰ä¸€æ¡è·¯å¾„å‘¢ï¼Ÿ
 			}
 			getchar();
 			return 1;
 		}
-		for (int x = 0;x<8;x++)//·Ö±ğÉ¨ÃèËÄ¸ö·½Ïò
+		for (int x = 0;x<8;x++)//åˆ†åˆ«æ‰«æå››ä¸ªæ–¹å‘
 		{   
 			n.x =p->data.x;
 			n.y =p->data.y;
-			n= open.next_point(n,x);//¸ù¾İxÖ¸Ê¾µÄ·½ÏòµÃµ½ÏÂÒ»¸öÉ¨ÃèµãµÄ×ø±ê
-// 			if (A_map.map[n.x][n.y]==0&&!open.find_point(n)&&!close.find_point(n))//µ±Ç°×ø±ên²»ÔÚ¿ªÆôÁĞ±í£¬¹Ø±ÕÁĞ±í£¬ÇÒÎª0
+			n= open.next_point(n,x);//æ ¹æ®xæŒ‡ç¤ºçš„æ–¹å‘å¾—åˆ°ä¸‹ä¸€ä¸ªæ‰«æç‚¹çš„åæ ‡
+// 			if (A_map.map[n.x][n.y]==0&&!open.find_point(n)&&!close.find_point(n))//å½“å‰åæ ‡nä¸åœ¨å¼€å¯åˆ—è¡¨ï¼Œå…³é—­åˆ—è¡¨ï¼Œä¸”ä¸º0
 // 			{
-// 				open.push(A_map.start,A_map.end,n,p);//¼ÓÈë¿ªÆôÁĞ±í
+// 				open.push(A_map.start,A_map.end,n,p);//åŠ å…¥å¼€å¯åˆ—è¡¨
 // 			}
 			if (x >= 4 && A_map.map[n.x][p->data.y]!=0 && A_map.map[p->data.x][n.y]!=0)
 			{
-				continue;
+				continue;//å¦‚æœæ˜¯æ–œæ–¹å‘ç§»åŠ¨, ä¸èƒ½ä»ä¸¤ä¸ªéšœç¢å¯¹è§’ç©¿è¿‡å»
 			}
 			if (A_map.map[n.x][n.y]==0 && !close.find_point(n))
 			{
-				if (!open.find_point(n))//µ±Ç°×ø±ên²»ÔÚ¿ªÆôÁĞ±í£¬¹Ø±ÕÁĞ±í£¬ÇÒÎª0
+				if (!open.find_point(n))//å½“å‰åæ ‡nä¸åœ¨å¼€å¯åˆ—è¡¨ï¼Œå…³é—­åˆ—è¡¨ï¼Œä¸”ä¸º0
 				{
-					open.push(A_map.start,A_map.end,n,p);//¼ÓÈë¿ªÆôÁĞ±í
+					open.push(A_map.start,A_map.end,n,p);//åŠ å…¥å¼€å¯åˆ—è¡¨
 				}
-// 				if (open.find_point(n))//µ±Ç°×ø±ên²»ÔÚ¿ªÆôÁĞ±í£¬¹Ø±ÕÁĞ±í£¬ÇÒÎª0
+// 				if (open.find_point(n))//å½“å‰åæ ‡nä¸åœ¨å¼€å¯åˆ—è¡¨ï¼Œå…³é—­åˆ—è¡¨ï¼Œä¸”ä¸º0
 // 				{
-// 					open.push(A_map.start,A_map.end,n,p);//¼ÓÈë¿ªÆôÁĞ±í
+// 					open.push(A_map.start,A_map.end,n,p);//åŠ å…¥å¼€å¯åˆ—è¡¨
 // 				}
 			}
 		}
-		n.x = p->data.x;//½«nµÄ×ø±ê»¹Ô­Îª¸¸½Úµã
+		n.x = p->data.x;//å°†nçš„åæ ‡è¿˜åŸä¸ºçˆ¶èŠ‚ç‚¹
 		n.y = p->data.y;
-		close.push(A_map.start,A_map.end,n);//½«¸¸½Úµã¼ÓÈëµ½¹Ø±ÕÁĞ±íÖĞ
-		open.delete_point(p);//ÔÚ¿ªÆôÁĞ±íÉ¾³ı¸¸½Úµã
-		p  = open.get_Fmin();//ÖØĞÂµÃµ½openÁĞ±íÖĞFÖµ×îµÍµÄ½Úµã
+		close.push(A_map.start,A_map.end,n);//å°†çˆ¶èŠ‚ç‚¹åŠ å…¥åˆ°å…³é—­åˆ—è¡¨ä¸­
+		open.delete_point(p);//åœ¨å¼€å¯åˆ—è¡¨åˆ é™¤çˆ¶èŠ‚ç‚¹
+		p  = open.get_Fmin();//é‡æ–°å¾—åˆ°openåˆ—è¡¨ä¸­Få€¼æœ€ä½çš„èŠ‚ç‚¹
 	}
-
 }
 
-void show_map(AStarMap & A_map,Astack & open,Astack & close)//ÏÔÊ¾µØÍ¼µÄº¯Êı
+void show_map(AStarMap & A_map,Astack & open,Astack & close)//æ˜¾ç¤ºåœ°å›¾çš„å‡½æ•°
 {
-
-	if (A_map.map_lenx>20||A_map.map_leny>20)//µ±ÃÔ¹¬µØÍ¼ĞĞÁĞ´óÓÚ20Ê±£¬½«ÆÁÄ»³ß´ç¼Ó´óÎª150*150µÄ¿ØÖÆÌ¨´°¿Ú
+	if (A_map.map_lenx>20||A_map.map_leny>20)//å½“è¿·å®«åœ°å›¾è¡Œåˆ—å¤§äº20æ—¶ï¼Œå°†å±å¹•å°ºå¯¸åŠ å¤§ä¸º150*150çš„æ§åˆ¶å°çª—å£
 	{
 		system("mode con cols=150 lines=150");
 	}
-	printf("µ±Ç°¿ªÊ¼ÆğµãÎª£º%d,%d  ÖÕµãÎª:%d,%d\nÔÚµØÍ¼ÖĞ¡°Ò»¡±ºÅ´ú±íÂ·¾¶,¡°*¡±ºÅ´ú±íÔÚµØÍ¼É¨Ãè¹ı³ÌÖĞ·ÃÎÊ¹ıµÄ½Úµã\n¡°¡õ¡±´ú±íÍ¨µÀ£¬¡°¡ö¡±´ú±íÇ½±Ú\n", A_map.start.x, A_map.start.y, A_map.end.x, A_map.end.y);
-	Astack * p =open.find_point(A_map.end);//µÃµ½º¬ÓĞÖÕµã×ø±êµÄ½Úµã£¬Ê¹ÓÃËüÈ¥Í¨¹ıfutherÖ¸Õë·´×Å±éÀúÖ®Ç°µÄ½Úµã£¬Ò»Ö±µ½Æğµã£¬¾ÍµÃµ½ÁËÂ·¾¶
+	printf("å½“å‰å¼€å§‹èµ·ç‚¹ä¸ºï¼š%d,%d  ç»ˆç‚¹ä¸º:%d,%d\nåœ¨åœ°å›¾ä¸­â€œä¸€â€å·ä»£è¡¨è·¯å¾„,â€œ*â€å·ä»£è¡¨åœ¨åœ°å›¾æ‰«æè¿‡ç¨‹ä¸­è®¿é—®è¿‡çš„èŠ‚ç‚¹\nâ€œâ–¡â€ä»£è¡¨é€šé“ï¼Œâ€œâ– â€ä»£è¡¨å¢™å£\n", A_map.start.x, A_map.start.y, A_map.end.x, A_map.end.y);
+	Astack * p =open.find_point(A_map.end);//å¾—åˆ°å«æœ‰ç»ˆç‚¹åæ ‡çš„èŠ‚ç‚¹ï¼Œä½¿ç”¨å®ƒå»é€šè¿‡futheræŒ‡é’ˆåç€éå†ä¹‹å‰çš„èŠ‚ç‚¹ï¼Œä¸€ç›´åˆ°èµ·ç‚¹ï¼Œå°±å¾—åˆ°äº†è·¯å¾„
 	Astack * k = open.next;
-	while (k)//½«¿ªÆôÁĞ±í´æÔÚµÄ½Úµã°üº¬µÄ×ø±êÔÚmapÖĞ¸³Öµ5£¬±íÊ¾·ÃÎÊ¹ıµÄ×ø±ê
+	while (k)//å°†å¼€å¯åˆ—è¡¨å­˜åœ¨çš„èŠ‚ç‚¹åŒ…å«çš„åæ ‡åœ¨mapä¸­èµ‹å€¼5ï¼Œè¡¨ç¤ºè®¿é—®è¿‡çš„åæ ‡
 	{
 		A_map.map[k->data.x][k->data.y] = 5;
 		k = k->next;
 	}
 	k = close.next;
-	while (k)//½«¹Ø±ÕÁĞ±í´æÔÚµÄ½Úµã°üº¬µÄ×ø±êÔÚmapÖĞ¸³Öµ5£¬±íÊ¾·ÃÎÊ¹ıµÄ×ø±ê
+	while (k)//å°†å…³é—­åˆ—è¡¨å­˜åœ¨çš„èŠ‚ç‚¹åŒ…å«çš„åæ ‡åœ¨mapä¸­èµ‹å€¼5ï¼Œè¡¨ç¤ºè®¿é—®è¿‡çš„åæ ‡
 	{
 		A_map.map[k->data.x][k->data.y] = 5;
 		k = k->next;
 	}
-	while (p)///½«½áÊø½ÚµãÍ¨¹ı²»¶Ï±éÀúfutherÖ¸Õëµ½Æğµã£¬ËùÓĞ½Úµã°üº¬µÄ×øÔÚmapÖĞ±êÈ«²¿¸³Öµ2£¬±íÊ¾ËûÃÇÊÇÂ·¾¶
+	while (p)///å°†ç»“æŸèŠ‚ç‚¹é€šè¿‡ä¸æ–­éå†futheræŒ‡é’ˆåˆ°èµ·ç‚¹ï¼Œæ‰€æœ‰èŠ‚ç‚¹åŒ…å«çš„ååœ¨mapä¸­æ ‡å…¨éƒ¨èµ‹å€¼2ï¼Œè¡¨ç¤ºä»–ä»¬æ˜¯è·¯å¾„
 	{
 		A_map.map[p->data.x][p->data.y] = 2;
 		p = p->futher;
 	}
-	A_map.map[A_map.start.x][A_map.start.y] = 10;//ÌØÊâ±ê¼ÇÆğµãÖÕµã
+	A_map.map[A_map.start.x][A_map.start.y] = 10;//ç‰¹æ®Šæ ‡è®°èµ·ç‚¹ç»ˆç‚¹
 	A_map.map[A_map.end.x][A_map.end.y] = 11;
-	for (int x = 0 ;x<A_map.map_lenx;x++)//Ñ­»·Êä³öµØÍ¼
+	for (int x = 0 ;x<A_map.map_lenx;x++)//å¾ªç¯è¾“å‡ºåœ°å›¾
 	{
 		for (int y = 0 ; y<A_map.map_leny;y++)
 		{
 			switch (A_map.map[x][y])
 			{
-			case  0:{printf("¡õ");break;}
-			case  1:{printf("¡ö");break;}
-			case  2:{printf("Ò»");break;}
+			case  0:{printf("â–¡");break;}
+			case  1:{printf("â– ");break;}
+			case  2:{printf("ä¸€");break;}
 			case  5:{printf(" *");break;}
-			case  10:{printf("Æğ");break;}
-			case  11:{printf("ÖÕ");break;}
+			case  10:{printf("èµ·");break;}
+			case  11:{printf("ç»ˆ");break;}
 			}
 		}
 		printf("\n");

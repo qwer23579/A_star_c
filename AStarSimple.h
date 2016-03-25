@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "stdio.h"
 #include "time.h"
 #include "stdlib.h"
@@ -9,31 +9,31 @@ const int TiltV = 14;
 
 class Astack;
 
-int  scan(AStarMap & A_map,Astack & open,Astack & close);//É¨Ãè×î¶ÌÂ·¾¶
-void show_map(AStarMap & A_map, Astack & open,Astack & close);//ÏÔÊ¾µØÍ¼µÄº¯Êı
+int  scan(AStarMap & A_map,Astack & open,Astack & close);//æ‰«ææœ€çŸ­è·¯å¾„
+void show_map(AStarMap & A_map, Astack & open,Astack & close);//æ˜¾ç¤ºåœ°å›¾çš„å‡½æ•°
 
-struct node//»ù±¾½Úµã£¬°üº¬ÆÀ¹ÀÖµ
+struct node//åŸºæœ¬èŠ‚ç‚¹ï¼ŒåŒ…å«è¯„ä¼°å€¼
 {
-	int  x,y;//¼ÇÂ¼ÔÚµØÍ¼ÖĞµÄxy×ø±ê
-	int f,g,h;//½ÚµãÆÀ¹ÀÖµf = ¸¸½Úµãµ½µ±Ç°½ÚµãµÄ´ú¼Ûg+µ±Ç°½Úµãµ½ÖÕµãµÄÔ¤¹À´ú¼Ûh£¬¼´f=g+h
+	int  x,y;//è®°å½•åœ¨åœ°å›¾ä¸­çš„xyåæ ‡
+	int f,g,h;//èŠ‚ç‚¹è¯„ä¼°å€¼f = çˆ¶èŠ‚ç‚¹åˆ°å½“å‰èŠ‚ç‚¹çš„ä»£ä»·g+å½“å‰èŠ‚ç‚¹åˆ°ç»ˆç‚¹çš„é¢„ä¼°ä»£ä»·hï¼Œå³f=g+h
 };
 
 class Astack
 {
 public:
-	node data;//Õ»µÄÃ¿Ò»¸öÊı¾İ½Úµã£¬Õâ¸öÊı¾İ½Úµã¼ÇÂ¼ÁË×Ô¼ºµÄ×ø±êºÍÆÀ¹ÀÖµf£¬Ô¤¹ÀÖµh£¬ºÍÏûºÄ´ú¼Ûg
-	Astack *next;//Ö¸ÏòÏÂÒ»¸ö½ÚµãµÄÖ¸Õë
-	Astack *futher;//Ö¸Ïò¸¸½Úµã£¬Õâ¸ö·Ç³£ÖØÒª£¬ÒòÎªµ±É¨ÃèÖÕµãµÄÊ±ºò£¬Í¨¹ı²»Í£·´Ïò²éÑ¯¸¸½Úµã¾Í¿ÉÒÔµÃµ½ÁË×î¶ÌÂ·¾¶
+	node data;//æ ˆçš„æ¯ä¸€ä¸ªæ•°æ®èŠ‚ç‚¹ï¼Œè¿™ä¸ªæ•°æ®èŠ‚ç‚¹è®°å½•äº†è‡ªå·±çš„åæ ‡å’Œè¯„ä¼°å€¼fï¼Œé¢„ä¼°å€¼hï¼Œå’Œæ¶ˆè€—ä»£ä»·g
+	Astack *next;//æŒ‡å‘ä¸‹ä¸€ä¸ªèŠ‚ç‚¹çš„æŒ‡é’ˆ
+	Astack *futher;//æŒ‡å‘çˆ¶èŠ‚ç‚¹ï¼Œè¿™ä¸ªéå¸¸é‡è¦ï¼Œå› ä¸ºå½“æ‰«æç»ˆç‚¹çš„æ—¶å€™ï¼Œé€šè¿‡ä¸åœåå‘æŸ¥è¯¢çˆ¶èŠ‚ç‚¹å°±å¯ä»¥å¾—åˆ°äº†æœ€çŸ­è·¯å¾„
 
 public:
 	Astack(void);
 	~Astack(void);
-	int conpute_F(const point & start,const point & end,Astack * p,Astack * futher);//¼ÆËãÒ»¸ö½ÚµãµÄFÖµ
-	int push(const point & start,const point & end,const point & point_n,Astack *F = NULL);//½«Ò»¸ö½Úµã¼ÓÈëÕ»ÖĞ
-	Astack * find_point(const point & point_n);//²éÕÒÕ»ÖĞÊÇ·ñ´æÔÚÒÔnÎª×ø±êµÄ½Úµã
-	Astack *get_Fmin();//µÃµ½Ò»¸öf×îĞ¡µÄ½Úµã£¬²¢·µ»ØÕâ¸ö½ÚµãµÄµØÖ·
-	int delete_point(Astack *Astack_p);//É¾³ıÕ»ÖĞÒ»¸ö½Úµã
-	point next_point(const point & point_n,int index = 0);//Í¨¹ıµ±Ç°×ø±êm¡¢ºÍindexËùÖ¸Ê¾µÄ·½Ïò¼ÆËãÏÂÒ»¸ö½Úµã×ø±ê
+	int conpute_F(const point & start,const point & end,Astack * p,Astack * futher);//è®¡ç®—ä¸€ä¸ªèŠ‚ç‚¹çš„Få€¼
+	int push(const point & start,const point & end,const point & point_n,Astack *F = NULL);//å°†ä¸€ä¸ªèŠ‚ç‚¹åŠ å…¥æ ˆä¸­
+	Astack * find_point(const point & point_n);//æŸ¥æ‰¾æ ˆä¸­æ˜¯å¦å­˜åœ¨ä»¥nä¸ºåæ ‡çš„èŠ‚ç‚¹
+	Astack *get_Fmin();//å¾—åˆ°ä¸€ä¸ªfæœ€å°çš„èŠ‚ç‚¹ï¼Œå¹¶è¿”å›è¿™ä¸ªèŠ‚ç‚¹çš„åœ°å€
+	int delete_point(Astack *Astack_p);//åˆ é™¤æ ˆä¸­ä¸€ä¸ªèŠ‚ç‚¹
+	point next_point(const point & point_n,int index = 0);//é€šè¿‡å½“å‰åæ ‡mã€å’Œindexæ‰€æŒ‡ç¤ºçš„æ–¹å‘è®¡ç®—ä¸‹ä¸€ä¸ªèŠ‚ç‚¹åæ ‡
 
 };
 

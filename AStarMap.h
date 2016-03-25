@@ -1,12 +1,12 @@
-#pragma once
+ï»¿#pragma once
 
 #include "stdio.h"
 #include "time.h"
 #include "stdlib.h"
 
-struct point//½Úµã×ø±ê½á¹¹Ìå
+struct point//èŠ‚ç‚¹åæ ‡ç»“æ„ä½“
 {
-	int x,y;//×ø±ê
+	int x,y;//åæ ‡
 };
 
 

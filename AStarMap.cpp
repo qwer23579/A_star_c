@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "AStarMap.h"
 
 AStarMap::AStarMap(const int & map_lenx,const int & map_leny,const point & start,const point & end,const int random):
@@ -7,27 +7,27 @@ AStarMap::AStarMap(const int & map_lenx,const int & map_leny,const point & start
 	start(start),
 	end(end)
 {
-//³õÊ¼»¯µØÍ¼
-	int t = 0;//ÓÃÀ´Éú³ÉËæ»úÊı
+//åˆå§‹åŒ–åœ°å›¾
+	int t = 0;//ç”¨æ¥ç”Ÿæˆéšæœºæ•°
 	int x,y;
-	//map = (int **)malloc(sizeof(int *)*map_lenx);//¶¯Ì¬ÉêÇëmap_lenx¸öÒ»Î¬Êı×é£¬²¢¸³Öµ¸ømap
+	//map = (int **)malloc(sizeof(int *)*map_lenx);//åŠ¨æ€ç”³è¯·map_lenxä¸ªä¸€ç»´æ•°ç»„ï¼Œå¹¶èµ‹å€¼ç»™map
 	map = new int *[map_lenx]; 
-	for (x = 0 ; x<map_lenx;x++)//¶ÔÓÚÃ¿¸öÒ»Î¬Êı×é¶¼ÒªÉêÇëmap_leny¸öÄÚ´æ¿Õ¼ä
+	for (x = 0 ; x<map_lenx;x++)//å¯¹äºæ¯ä¸ªä¸€ç»´æ•°ç»„éƒ½è¦ç”³è¯·map_lenyä¸ªå†…å­˜ç©ºé—´
 	{
 		//map[x] = (int *)malloc(sizeof(int )*map_leny);
 		map[x] = new int[map_leny];
 	}
 
-	for ( x=  1 ;x<map_lenx-1;x++)//Ê¹ÓÃË«Ñ­»·¶ÔÉêÇëµÄ¶¯Ì¬¶şÎ¬Êı×é¸³Öµ
+	for ( x=  1 ;x<map_lenx-1;x++)//ä½¿ç”¨åŒå¾ªç¯å¯¹ç”³è¯·çš„åŠ¨æ€äºŒç»´æ•°ç»„èµ‹å€¼
 	{
 		for ( y = 1 ; y<map_leny-1 ; y++)
 		{	
 			if (random == 0)
 			{
-				//Ã¿´Î¶¼»áÖØÖÃsrand(),²¢ÇÒÑ­»·µ÷ÓÃ,Ôì³ÉËæ»úÊı¾İÖØ¸´,½«ÖÖ×ÓÒÆµ½main()º¯ÊıÀïÃæ
-				//srand((unsigned)time(NULL)+rand());//ÖÃËæ»úÖÖ×Ó,²»È»Éú³ÉµÄµØÍ¼ºÜ¶àÊ±ºòÊÇÒ»ÑùµÄ
-				t = rand()%200;//µÃµ½Ò»¸ö200ÒÔÄÚµÄÊı
-				if (t>40)//µ±t´óÓÚ40Ê± = 0£¬·ñÔò = 1£¬ÕâÑù×öÊÇÎªÁËÊ¹¿ÉÍ¨ĞĞµÄ¿Õ¼ä¶àÒ»Ğ©£¬²»È»Ì«ÈİÒ×ĞÎ³ÉÃ»Í¨Â·µÄµØÍ¼
+				//æ¯æ¬¡éƒ½ä¼šé‡ç½®srand(),å¹¶ä¸”å¾ªç¯è°ƒç”¨,é€ æˆéšæœºæ•°æ®é‡å¤,å°†ç§å­ç§»åˆ°main()å‡½æ•°é‡Œé¢
+				//srand((unsigned)time(NULL)+rand());//ç½®éšæœºç§å­,ä¸ç„¶ç”Ÿæˆçš„åœ°å›¾å¾ˆå¤šæ—¶å€™æ˜¯ä¸€æ ·çš„
+				t = rand()%200;//å¾—åˆ°ä¸€ä¸ª200ä»¥å†…çš„æ•°
+				if (t>40)//å½“tå¤§äº40æ—¶ = 0ï¼Œå¦åˆ™ = 1ï¼Œè¿™æ ·åšæ˜¯ä¸ºäº†ä½¿å¯é€šè¡Œçš„ç©ºé—´å¤šä¸€äº›ï¼Œä¸ç„¶å¤ªå®¹æ˜“å½¢æˆæ²¡é€šè·¯çš„åœ°å›¾
 				{
 					map[x][y] = 0;
 				}
@@ -44,23 +44,23 @@ AStarMap::AStarMap(const int & map_lenx,const int & map_leny,const point & start
 	}
 	if (random != 0)
 	{
-		for (x= 5 ;x<map_leny-5;x++)//¶ÔµØÍ¼µÄµÚÁãĞĞºÍ×îºóÒ»ĞĞÖÃ1£¬ÒòÎªÊÇÇ½±Ú
+		for (x= 5 ;x<map_leny-5;x++)//å¯¹åœ°å›¾çš„ç¬¬é›¶è¡Œå’Œæœ€åä¸€è¡Œç½®1ï¼Œå› ä¸ºæ˜¯å¢™å£
 		{
 			map[5][x] = 1;
 			map[map_lenx-6][x] = 1;
 		}
-		for (y= 5; y<map_lenx-5;y++)//¶ÔµØÍ¼µÄµÚÁãÁĞºÍ×îºóÒ»ÁĞÖÃ1£¬ÒòÎªÊÇÇ½±Ú
+		for (y= 5; y<map_lenx-5;y++)//å¯¹åœ°å›¾çš„ç¬¬é›¶åˆ—å’Œæœ€åä¸€åˆ—ç½®1ï¼Œå› ä¸ºæ˜¯å¢™å£
 		{
 			map[y][map_leny-5] = 1;
 		}
 	}
 
-	for (x= 0 ;x<map_leny;x++)//¶ÔµØÍ¼µÄµÚÁãĞĞºÍ×îºóÒ»ĞĞÖÃ1£¬ÒòÎªÊÇÇ½±Ú
+	for (x= 0 ;x<map_leny;x++)//å¯¹åœ°å›¾çš„ç¬¬é›¶è¡Œå’Œæœ€åä¸€è¡Œç½®1ï¼Œå› ä¸ºæ˜¯å¢™å£
 	{
 		map[0][x] = 1;
 		map[map_lenx-1][x] = 1;
 	}
-	for (y= 0; y<map_lenx;y++)//¶ÔµØÍ¼µÄµÚÁãÁĞºÍ×îºóÒ»ÁĞÖÃ1£¬ÒòÎªÊÇÇ½±Ú
+	for (y= 0; y<map_lenx;y++)//å¯¹åœ°å›¾çš„ç¬¬é›¶åˆ—å’Œæœ€åä¸€åˆ—ç½®1ï¼Œå› ä¸ºæ˜¯å¢™å£
 	{
 		map[y][0] = 1;
 		map[y][map_leny-1] = 1;
