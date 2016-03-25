@@ -27,11 +27,11 @@ public:
 	Astack(void);
 	~Astack(void);
 	int conpute_F(const point & start,const point & end,Astack * p,Astack * futher);//计算一个节点的F值
-	int push(const point & start,const point & end,const point & n,Astack *F = NULL);//将一个节点加入栈中
-	Astack * find_point(const point & n);//查找栈中是否存在以n为坐标的节点
+	int push(const point & start,const point & end,const point & point_n,Astack *F = NULL);//将一个节点加入栈中
+	Astack * find_point(const point & point_n);//查找栈中是否存在以n为坐标的节点
 	Astack *get_Fmin();//得到一个f最小的节点，并返回这个节点的地址
-	int delete_point(Astack *n);//删除栈中一个节点
-	point next_point(const point & m,int index = 0);//通过当前坐标m、和index所指示的方向计算下一个节点坐标
+	int delete_point(Astack *Astack_p);//删除栈中一个节点
+	point next_point(const point & point_n,int index = 0);//通过当前坐标m、和index所指示的方向计算下一个节点坐标
 
 };
 

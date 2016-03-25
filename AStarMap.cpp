@@ -10,10 +10,12 @@ AStarMap::AStarMap(const int & map_lenx,const int & map_leny,const point & start
 	//初始化地图
 	int t = 0;//用来生成随机数
 	int x,y;
-	MAP = (int **)malloc(sizeof(int *)*map_lenx);//动态申请map_lenx个一维数组，并赋值给MAP
+	//MAP = (int **)malloc(sizeof(int *)*map_lenx);//动态申请map_lenx个一维数组，并赋值给MAP
+	MAP = new int *[map_lenx]; 
 	for (x = 0 ; x<map_lenx;x++)//对于每个一维数组都要申请map_leny个内存空间
 	{
-		MAP[x] = (int *)malloc(sizeof(int )*map_leny);
+		//MAP[x] = (int *)malloc(sizeof(int )*map_leny);
+		MAP[x] = new int[map_leny];
 	}
 	for ( x=  0 ;x<map_lenx;x++)//使用双循环对申请的动态二维数组赋值
 	{
@@ -47,4 +49,9 @@ AStarMap::AStarMap(const int & map_lenx,const int & map_leny,const point & start
 
 AStarMap::~AStarMap(void)
 {
+	for ( int x = 0 ; x<map_lenx;x++)
+	{
+		delete[] MAP[x];
+	}
+	delete[] MAP;
 }

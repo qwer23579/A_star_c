@@ -30,12 +30,13 @@ int Astack::conpute_F(const point & start,const point & end,Astack *p,Astack * f
 
 }
 
-int Astack::push(const point & start,const point & end,const point & n,Astack *F)//F为父节点默认为空，这只是习惯问题//插入头结点之后
+int Astack::push(const point & start,const point & end,const point & point_n,Astack *F)//F为父节点默认为空，这只是习惯问题//插入头结点之后
 {
-	Astack * p  = (Astack *)malloc(sizeof(Astack));//申请一个结构体空间
+	//Astack * p  = (Astack *)malloc(sizeof(Astack));//申请一个结构体空间
+	Astack * p  = new Astack;
 	Astack *q = NULL;
-	p->data.x = n.x;//加入坐标值
-	p->data.y = n.y;
+	p->data.x = point_n.x;//加入坐标值
+	p->data.y = point_n.y;
 	conpute_F(start,end,p,F);//根据父节点F计算p节点坐标为n.x和n.y的F值
 	p->futher = F;//反指父节点，这一点非常重要，重要，重要
 	if (next==NULL)//下面是使用前插法进行链表的连接
@@ -54,12 +55,12 @@ int Astack::push(const point & start,const point & end,const point & n,Astack *F
 
 }
 
-Astack *Astack::find_point(const point & n)
+Astack *Astack::find_point(const point & point_n)
 {
 	Astack * p = next;
 	while (p)//循环一直到栈的最后
 	{
-		if (p->data.x==n.x&&p->data.y==n.y)//如果相等，就存在
+		if (p->data.x==point_n.x&&p->data.y==point_n.y)//如果相等，就存在
 		{
 			return p;//返回查询代码1,代表栈中存在了这样的节点
 		}
@@ -77,54 +78,59 @@ Astack *Astack::get_Fmin()
 		if (p->data.f<=f)
 		{
 			f = p->data.f;
-			q= p;
+			q = p;
 		}
 		p = p->next;
 	}
 	return q;//返回找到的节点的地址
 }
 
-int Astack::delete_point(Astack *n)//传入要删除的节点地址
+int Astack::delete_point(Astack *Astack_p)//传入要删除的节点地址
 {
 	int index = 0;
-	Astack * p = next,*q = next;
-	if (next->next==NULL)//只有一个节点时
+	Astack *tempA = next;//wang：临时变量
+	Astack * p = next;//,*q = next;
+	if (p->next==NULL)//只有一个节点时
 	{
-		next = NULL;//将栈置空
+		
+		p = NULL;//将栈置空
+		//delete p;//wang
 		return 0;//栈空了
 	}
-	if (p->data.x==n->data.x&&p->data.y==n->data.y)//第一个节点就是要删除的节点
+	//wang: 保证要删除的点的前节点已知
+	if (p->data.x==Astack_p->data.x&&p->data.y==Astack_p->data.y)//第一个节点就是要删除的节点
 	{
 		next = next->next;//直接指向第二个节点
+		//delete tempA;//wang:释放内存
 		return 1;
 	}
-	p = p->next;//p指向下一个节点，而此时q是指向p的
+	p = p->next;//p指向下一个节点，而此时q\ tempA是指向p的
 
 	while (p)
 	{
-		if (p->data.x==n->data.x&&p->data.y==n->data.y)//存在
+		if (p->data.x==Astack_p->data.x&&p->data.y==Astack_p->data.y)//存在
 		{
-			q->next = p->next;//使用q直接指向p的下一个节点，达到删除的目的
+			tempA->next = p->next;//使用q直接指向p的下一个节点，达到删除的目的
+			//delete p;
 			return index;//返回删除的位置
 		}
-		q = p;
+		tempA = p;
 		p = p->next;
 	}
 	return -1;//返回错误，列表中不存在这个节点
 }
 
-point Astack::next_point(const point & m,int index)
+point Astack::next_point(const point & point_n,int index)
 {
-	point n;
+	point near_n;
 	switch (index)
 	{
-	case 0: {n.x = m.x,n.y = m.y+1;break;}//东
-	case 1: {n.x = m.x+1,n.y = m.y;break;}//南
-	case 2: {n.x = m.x-1,n.y = m.y;break;}//西
-	case 3: {n.x = m.x,n.y = m.y-1;break;}//北
+		case 0: {near_n.x = point_n.x,  near_n.y = point_n.y+1;break;}//东
+		case 1: {near_n.x = point_n.x+1,near_n.y = point_n.y;break;}//南
+		case 2: {near_n.x = point_n.x-1,near_n.y = point_n.y;break;}//西
+		case 3: {near_n.x = point_n.x,  near_n.y = point_n.y-1;break;}//北
 	}
-
-	return n;	//返回生成的节点
+	return near_n;	//返回生成的节点
 }
 
 //扫描最短路径
@@ -142,7 +148,7 @@ int scan(AStarMap & A_MAP,Astack & open,Astack & close)
 			show_map(A_MAP,open,close);//显示
 			if (open.next==NULL)//当开启列表为空时，代表没有路径可以到达终点
 			{
-				printf("地图不可到达\n");
+				printf("地图不可到达\n");//Wang：若有且只有一条路径呢？
 			}
 			getchar();
 			return 1;
