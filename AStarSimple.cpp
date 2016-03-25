@@ -19,14 +19,15 @@ int Astack::conpute_F(const point & start,const point & end,Astack *p,Astack * f
 		p->data.g = 0;
 		p->data.h = 0;//将f，g值置0，而h值得话，因为永远不会使用到，所以是什么值不所谓
 		p->data.f =0;
-		return 1;
+		return 1;//返回值问题
 	}
-	p->data.g = futher->data.g+1;//当前节点的g值总比父节点的g值大1，因为他们相距一个距离
-	p->data.h =abs(end.x - p->data.x)+abs(end.y-p->data.y);//预估代价h是根据对X，Y坐标相减的绝对值相加得到的
+	int G = (abs(p->data.x - start.x) + abs(p->data.x - start.y)) == 2 ? VertV : TiltV;
+	p->data.g = futher->data.g + G;//当前节点的g值总比父节点的g值大G，因为他们相距一个距离
+	p->data.h =VertV*abs(end.x - p->data.x)+VertV*abs(end.y-p->data.y);//预估代价h是根据对X，Y坐标相减的绝对值相加得到的
 	//同时这也是启发式搜索的关键，对于估价函数的选取呢，还有很多的方法
 	p->data.f =p->data.g+p->data.h;//将两个值h，g加起来得到本节点的评估值f
 
-	return 1;//成功返回
+	return p->data.f;//成功返回
 
 }
 
@@ -125,27 +126,32 @@ point Astack::next_point(const point & point_n,int index)
 	point near_n;
 	switch (index)
 	{
-		case 0: {near_n.x = point_n.x,  near_n.y = point_n.y+1;break;}//东
-		case 1: {near_n.x = point_n.x+1,near_n.y = point_n.y;break;}//南
-		case 2: {near_n.x = point_n.x-1,near_n.y = point_n.y;break;}//西
-		case 3: {near_n.x = point_n.x,  near_n.y = point_n.y-1;break;}//北
+		case 0: {near_n.x = point_n.x  ,near_n.y = point_n.y+1;break;}//东
+		case 1: {near_n.x = point_n.x+1,near_n.y = point_n.y  ;break;}//南
+		case 2: {near_n.x = point_n.x-1,near_n.y = point_n.y  ;break;}//wang:北
+		case 3: {near_n.x = point_n.x  ,near_n.y = point_n.y-1;break;}//wang:西
+		case 4: {near_n.x = point_n.x+1,near_n.y = point_n.y+1;break;}//东南
+		case 5: {near_n.x = point_n.x-1,near_n.y = point_n.y+1;break;}//东北
+		case 6: {near_n.x = point_n.x+1,near_n.y = point_n.y-1;break;}//西南
+		case 7: {near_n.x = point_n.x-1,near_n.y = point_n.y-1;break;}//西北
+
 	}
 	return near_n;	//返回生成的节点
 }
 
 //扫描最短路径
-int scan(AStarMap & A_MAP,Astack & open,Astack & close)
+int scan(AStarMap & A_map,Astack & open,Astack & close)
 {
-	open.push(A_MAP.start,A_MAP.end,A_MAP.start);//将开始节点压入开启列表
-	A_MAP.MAP[A_MAP.start.x][A_MAP.start.y] = 0;
-	A_MAP.MAP[A_MAP.end.x][A_MAP.end.y] = 0;
+	open.push(A_map.start,A_map.end,A_map.start);//将开始节点压入开启列表
+	A_map.map[A_map.start.x][A_map.start.y] = 0;
+	A_map.map[A_map.end.x][A_map.end.y] = 0;
 	Astack * p  = open.get_Fmin(),*q = NULL;//得到open列表中F值最低的节点
 	point n;
 	while (true)//进入死循环查找路径
 	{
-		if (open.find_point(A_MAP.end)||open.next==NULL)//如果发现终点在开启列表的时候，找到了最短路径
+		if (open.find_point(A_map.end)||open.next==NULL)//如果发现终点在开启列表的时候，找到了最短路径
 		{
-			show_map(A_MAP,open,close);//显示
+			show_map(A_map,open,close);//显示
 			if (open.next==NULL)//当开启列表为空时，代表没有路径可以到达终点
 			{
 				printf("地图不可到达\n");//Wang：若有且只有一条路径呢？
@@ -153,58 +159,73 @@ int scan(AStarMap & A_MAP,Astack & open,Astack & close)
 			getchar();
 			return 1;
 		}
-		for (int x = 0;x<4;x++)//分别扫描四个方向
+		for (int x = 0;x<8;x++)//分别扫描四个方向
 		{   
 			n.x =p->data.x;
 			n.y =p->data.y;
 			n= open.next_point(n,x);//根据x指示的方向得到下一个扫描点的坐标
-			if (A_MAP.MAP[n.x][n.y]==0&&!open.find_point(n)&&!close.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
+// 			if (A_map.map[n.x][n.y]==0&&!open.find_point(n)&&!close.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
+// 			{
+// 				open.push(A_map.start,A_map.end,n,p);//加入开启列表
+// 			}
+			if (x >= 4 && A_map.map[n.x][p->data.y]!=0 && A_map.map[p->data.x][n.y]!=0)
 			{
-				open.push(A_MAP.start,A_MAP.end,n,p);//加入开启列表
+				continue;
+			}
+			if (A_map.map[n.x][n.y]==0 && !close.find_point(n))
+			{
+				if (!open.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
+				{
+					open.push(A_map.start,A_map.end,n,p);//加入开启列表
+				}
+// 				if (open.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
+// 				{
+// 					open.push(A_map.start,A_map.end,n,p);//加入开启列表
+// 				}
 			}
 		}
 		n.x = p->data.x;//将n的坐标还原为父节点
 		n.y = p->data.y;
-		close.push(A_MAP.start,A_MAP.end,n);//将父节点加入到关闭列表中
+		close.push(A_map.start,A_map.end,n);//将父节点加入到关闭列表中
 		open.delete_point(p);//在开启列表删除父节点
 		p  = open.get_Fmin();//重新得到open列表中F值最低的节点
 	}
 
 }
 
-void show_map(AStarMap & A_MAP,Astack & open,Astack & close)//显示地图的函数
+void show_map(AStarMap & A_map,Astack & open,Astack & close)//显示地图的函数
 {
 
-	if (A_MAP.map_lenx>20||A_MAP.map_leny>20)//当迷宫地图行列大于20时，将屏幕尺寸加大为150*150的控制台窗口
+	if (A_map.map_lenx>20||A_map.map_leny>20)//当迷宫地图行列大于20时，将屏幕尺寸加大为150*150的控制台窗口
 	{
 		system("mode con cols=150 lines=150");
 	}
-	printf("当前开始起点为：%d,%d  终点为:%d,%d\n在地图中“一”号代表路径,“*”号代表在地图扫描过程中访问过的节点\n“□”代表通道，“■”代表墙壁\n", A_MAP.start.x, A_MAP.start.y, A_MAP.end.x, A_MAP.end.y);
-	Astack * p =open.find_point(A_MAP.end);//得到含有终点坐标的节点，使用它去通过futher指针反着遍历之前的节点，一直到起点，就得到了路径
+	printf("当前开始起点为：%d,%d  终点为:%d,%d\n在地图中“一”号代表路径,“*”号代表在地图扫描过程中访问过的节点\n“□”代表通道，“■”代表墙壁\n", A_map.start.x, A_map.start.y, A_map.end.x, A_map.end.y);
+	Astack * p =open.find_point(A_map.end);//得到含有终点坐标的节点，使用它去通过futher指针反着遍历之前的节点，一直到起点，就得到了路径
 	Astack * k = open.next;
-	while (k)//将开启列表存在的节点包含的坐标在MAP中赋值5，表示访问过的坐标
+	while (k)//将开启列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
 	{
-		A_MAP.MAP[k->data.x][k->data.y] = 5;
+		A_map.map[k->data.x][k->data.y] = 5;
 		k = k->next;
 	}
 	k = close.next;
-	while (k)//将关闭列表存在的节点包含的坐标在MAP中赋值5，表示访问过的坐标
+	while (k)//将关闭列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
 	{
-		A_MAP.MAP[k->data.x][k->data.y] = 5;
+		A_map.map[k->data.x][k->data.y] = 5;
 		k = k->next;
 	}
-	while (p)///将结束节点通过不断遍历futher指针到起点，所有节点包含的坐在MAP中标全部赋值2，表示他们是路径
+	while (p)///将结束节点通过不断遍历futher指针到起点，所有节点包含的坐在map中标全部赋值2，表示他们是路径
 	{
-		A_MAP.MAP[p->data.x][p->data.y] = 2;
+		A_map.map[p->data.x][p->data.y] = 2;
 		p = p->futher;
 	}
-	A_MAP.MAP[A_MAP.start.x][A_MAP.start.y] = 10;//特殊标记起点终点
-	A_MAP.MAP[A_MAP.end.x][A_MAP.end.y] = 11;
-	for (int x = 0 ;x<A_MAP.map_lenx;x++)//循环输出地图
+	A_map.map[A_map.start.x][A_map.start.y] = 10;//特殊标记起点终点
+	A_map.map[A_map.end.x][A_map.end.y] = 11;
+	for (int x = 0 ;x<A_map.map_lenx;x++)//循环输出地图
 	{
-		for (int y = 0 ; y<A_MAP.map_leny;y++)
+		for (int y = 0 ; y<A_map.map_leny;y++)
 		{
-			switch (A_MAP.MAP[x][y])
+			switch (A_map.map[x][y])
 			{
 			case  0:{printf("□");break;}
 			case  1:{printf("■");break;}

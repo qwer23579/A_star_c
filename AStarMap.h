@@ -13,7 +13,7 @@ struct point//节点坐标结构体
 class AStarMap
 {
 public:
-	int** MAP;
+	int** map;
 	int map_lenx;
 	int map_leny;
 	struct point start;

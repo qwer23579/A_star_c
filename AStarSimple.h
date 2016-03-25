@@ -2,13 +2,15 @@
 #include "stdio.h"
 #include "time.h"
 #include "stdlib.h"
-
 #include "AStarMap.h"
+
+const int VertV = 10;
+const int TiltV = 14;
 
 class Astack;
 
-int  scan(AStarMap & A_MAP,Astack & open,Astack & close);//扫描最短路径
-void show_map(AStarMap & A_MAP, Astack & open,Astack & close);//显示地图的函数
+int  scan(AStarMap & A_map,Astack & open,Astack & close);//扫描最短路径
+void show_map(AStarMap & A_map, Astack & open,Astack & close);//显示地图的函数
 
 struct node//基本节点，包含评估值
 {
