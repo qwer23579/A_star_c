@@ -11,7 +11,7 @@ Astack::Astack(void)
 Astack::~Astack(void)
 {
 }
-
+//只计算上下左右的方案
 int Astack::conpute_F(const point & start,const point & end,Astack *p,Astack * futher)
 {
 	if (p->data.x==start.x&&p->data.y==start.y||futher==NULL)//如果父亲节点为空，或当前节点为起点
