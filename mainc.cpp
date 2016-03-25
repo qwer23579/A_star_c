@@ -2,6 +2,8 @@
 
 #include "stdafx.h"
 
+#define TESTMODEL
+
 // 本程序使用A*算法编写，在VS系列开发平台编写，可以兼容VC系列开发软件，不可在TC系列开发平台上运行
 	//A*算法是一种静态路网中最高效的搜索最短路径的算法
 	//核心思想是：启发式搜索，最最核心的是估价函数F（评估值） = G（父节点到自己的代价）+H（自己到终点的理论距离）
@@ -20,26 +22,32 @@ void main()
 
 		int map_lenx = 20;
 		int map_leny = 20;
-		struct point start,end;
+		struct point start = {3,3};
+		struct point end = {16,16};
 		Astack open,close;
 
-		printf("A星算法静态路网最短路径！！！\n请输入地图行数，列数：(地图范围最好在3*3-100*100内)\n");
-		scanf("%d",&map_lenx);
-		scanf("%d",&map_leny);
-		printf("请输入地图起点x,y：(起点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
-		scanf("%d",&start.x);
-		scanf("%d",&start.y);
-		printf("请输入地图终点x,y：(终点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
-		scanf("%d",&end.x);
-		scanf("%d",&end.y);
-		if (start.x>map_lenx-1||start.y>map_leny-1||end.x>map_lenx-1||end.y>map_leny-1)
+#ifndef TESTMODEL
 		{
-			printf("起点或终点已在地图外，无法寻路!!!\n按任意键继续....\n");
-			getchar();
-			continue;
+			printf("A星算法静态路网最短路径！！！\n请输入地图行数，列数：(地图范围最好在3*3-100*100内)\n");
+			scanf("%d",&map_lenx);
+			scanf("%d",&map_leny);
+			printf("请输入地图起点x,y：(起点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
+			scanf("%d",&start.x);
+			scanf("%d",&start.y);
+			printf("请输入地图终点x,y：(终点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
+			scanf("%d",&end.x);
+			scanf("%d",&end.y);
+			if (start.x>map_lenx-1||start.y>map_leny-1||end.x>map_lenx-1||end.y>map_leny-1)
+			{
+				printf("起点或终点已在地图外，无法寻路!!!\n按任意键继续....\n");
+				getchar();
+				continue;
+			}
 		}
+#endif
 
-		AStarMap A_MAP(map_lenx,map_lenx,start,end);//新建地图
+		AStarMap A_MAP(map_lenx,map_leny,start,end,0);//新建地图
+
 		scan(A_MAP,open,close);//扫描路径
 		open.next = NULL;//置空开启列表和关闭列表
 		close.next = NULL;

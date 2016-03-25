@@ -20,7 +20,7 @@ public:
 	struct point end;
 	
 public:
-	AStarMap(const int & map_lenx,const int & map_leny,const point & start,const point & end);
+	AStarMap(const int & map_lenx,const int & map_leny,const point & start,const point & end,const int random);
 	~AStarMap(void);
 };
 
