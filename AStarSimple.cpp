@@ -1,6 +1,6 @@
 ﻿#include "StdAfx.h"
 #include "AStarSimple.h"
-
+#include <algorithm>
 
 Astack::Astack(void)
 {
@@ -21,9 +21,11 @@ int Astack::conpute_F(const point & start,const point & end,Astack *p,Astack * f
 		p->data.f =0;
 		return 1;//返回值问题
 	}
-	int G = (abs(p->data.x - start.x) + abs(p->data.x - start.y)) == 2 ? VertV : TiltV;
-	p->data.g = futher->data.g + G;//当前节点的g值总比父节点的g值大G，因为他们相距一个距离
-	p->data.h =VertV*abs(end.x - p->data.x)+VertV*abs(end.y-p->data.y);//预估代价h是根据对X，Y坐标相减的绝对值相加得到的
+	int jug = (abs(p->data.x - start.x) + abs(p->data.x - start.y)) == 2 ? VertV : TiltV;
+	p->data.g = futher->data.g + jug;//当前节点的g值总比父节点的g值大G，因为他们相距一个距离
+	int diag = std::min(abs(end.x - p->data.x),abs(end.y - p->data.y));
+	int stra = abs(end.x - p->data.x) + abs(end.y - p->data.y);
+	p->data.h =TiltV*diag + VertV*(stra - 2 * diag);//预估代价h是根据对X，Y坐标相减的绝对值相加得到的
 	//同时这也是启发式搜索的关键，对于估价函数的选取呢，还有很多的方法
 	p->data.f =p->data.g+p->data.h;//将两个值h，g加起来得到本节点的评估值f
 
@@ -147,6 +149,9 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 	A_map.map[A_map.end.x][A_map.end.y] = 0;
 	Astack * p  = open.get_Fmin(),*q = NULL;//得到open列表中F值最低的节点
 	point n;
+/*	Astack *stacknew = new Astack;*/
+	Astack stacknew;
+	Astack *stackold;
 	while (true)//进入死循环查找路径
 	{
 		if (open.find_point(A_map.end)||open.next==NULL)//如果发现终点在开启列表的时候，找到了最短路径
@@ -159,16 +164,16 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 			getchar();
 			return 1;
 		}
-		for (int x = 0;x<8;x++)//分别扫描四个方向
+		for (int i = 0;i<8;i++)//分别扫描四个方向
 		{   
 			n.x =p->data.x;
 			n.y =p->data.y;
-			n= open.next_point(n,x);//根据x指示的方向得到下一个扫描点的坐标
+			n= open.next_point(n,i);//根据x指示的方向得到下一个扫描点的坐标
 // 			if (A_map.map[n.x][n.y]==0&&!open.find_point(n)&&!close.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
 // 			{
 // 				open.push(A_map.start,A_map.end,n,p);//加入开启列表
 // 			}
-			if (x >= 4 && A_map.map[n.x][p->data.y]!=0 && A_map.map[p->data.x][n.y]!=0)
+			if (i >= 4 && A_map.map[n.x][p->data.y]!=0 && A_map.map[p->data.x][n.y]!=0)
 			{
 				continue;//如果是斜方向移动, 不能从两个障碍对角穿过去
 			}
@@ -178,10 +183,35 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 				{
 					open.push(A_map.start,A_map.end,n,p);//加入开启列表
 				}
-// 				if (open.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
-// 				{
-// 					open.push(A_map.start,A_map.end,n,p);//加入开启列表
-// 				}
+				//重新计算f值，并看是否需要更新父节点
+				else
+				{
+// 					stackold = open.find_point(n);
+// 					int jug = (abs(p->data.x - n.x) + abs(p->data.x - n.y)) == 2 ? VertV : TiltV;
+// 					int g = p->data.g + jug;//当前节点的g值总比父节点的g值大G，因为他们相距一个距离
+// 					int diag = std::min(abs(A_map.end.x - n.x),abs(A_map.end.y - n.y));
+// 					int stra = abs(A_map.end.x - n.x) + abs(A_map.end.y - n.y);
+// 					int h =TiltV*diag + VertV*(stra - 2 * diag);
+// 					//int h =VertV*abs(A_map.end.x - n.x)+VertV*abs(A_map.end.y - n.y);//预估代价h是根据对X，Y坐标相减的绝对值相加得到的
+// 					//同时这也是启发式搜索的关键，对于估价函数的选取呢，还有很多的方法
+// 					int f = g + h;//将两个值h，g加起来得到本节点的评估值f
+// 
+// 
+// 					if (stackold->data.f > f)
+// 					{
+// 						stackold->data.f = f;
+// 						stackold->futher = p;
+// 					}
+					stackold = open.find_point(n);
+					stacknew.data.x = n.x ;
+					stacknew.data.y = n.y;
+					open.conpute_F(A_map.start,A_map.end,&stacknew,p);//根据父节点F计算p节点坐标为n.x和n.y的F值
+					if (stacknew.data.f<stackold->data.f)
+					{
+						stackold->data.f = stacknew.data.f;
+						stackold->futher = p;
+					}
+				}
 			}
 		}
 		n.x = p->data.x;//将n的坐标还原为父节点
