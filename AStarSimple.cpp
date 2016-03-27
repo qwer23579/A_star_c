@@ -21,7 +21,7 @@ int Astack::conpute_F(const point & start,const point & end,Astack *p,Astack * f
 		p->data.f =0;
 		return 1;//返回值问题
 	}
-	int jug = (abs(p->data.x - start.x) + abs(p->data.x - start.y)) == 2 ? VertV : TiltV;
+	int jug = (abs(p->data.x - futher->data.x) + abs(p->data.y - futher->data.y)) == 2 ? TiltV : VertV;
 	p->data.g = futher->data.g + jug;//当前节点的g值总比父节点的g值大G，因为他们相距一个距离
 	int diag = std::min(abs(end.x - p->data.x),abs(end.y - p->data.y));
 	int stra = abs(end.x - p->data.x) + abs(end.y - p->data.y);
@@ -208,6 +208,9 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 					open.conpute_F(A_map.start,A_map.end,&stacknew,p);//根据父节点F计算p节点坐标为n.x和n.y的F值
 					if (stacknew.data.f<stackold->data.f)
 					{
+						
+						stackold->data.g = stacknew.data.g;
+						stackold->data.h = stacknew.data.h;
 						stackold->data.f = stacknew.data.f;
 						stackold->futher = p;
 					}

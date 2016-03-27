@@ -46,6 +46,7 @@ void main()
 #endif
 
 		AStarMap A_map(map_lenx,map_leny,start,end,0);//新建地图
+		//AStarMap A_map(map_lenx,map_leny,start,end,1);//固定测试地图
 		scan(A_map,open,close);//扫描路径
 		open.next = NULL;//置空开启列表和关闭列表
 		close.next = NULL;

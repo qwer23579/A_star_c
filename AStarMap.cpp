@@ -1,6 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "AStarMap.h"
 
+
 AStarMap::AStarMap(const int & map_lenx,const int & map_leny,const point & start,const point & end,const int random):
 	map_lenx(map_lenx),
 	map_leny(map_leny),
@@ -44,14 +45,14 @@ AStarMap::AStarMap(const int & map_lenx,const int & map_leny,const point & start
 	}
 	if (random != 0)
 	{
-		for (x= 5 ;x<map_leny-5;x++)//对地图的第零行和最后一行置1，因为是墙壁
+		for (x= Vconst ;x<map_leny-Vconst;x++)//对地图的第零行和最后一行置1，因为是墙壁
 		{
-			map[5][x] = 1;
-			map[map_lenx-6][x] = 1;
+			map[Vconst-1][x] = 1;
+			map[map_lenx-Vconst-1][x] = 1;
 		}
-		for (y= 5; y<map_lenx-5;y++)//对地图的第零列和最后一列置1，因为是墙壁
+		for (y= Vconst; y<map_lenx-Vconst;y++)//对地图的第零列和最后一列置1，因为是墙壁
 		{
-			map[y][map_leny-5] = 1;
+			map[y][map_leny-Vconst-1] = 1;
 		}
 	}
 

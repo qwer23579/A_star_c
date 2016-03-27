@@ -4,6 +4,8 @@
 #include "time.h"
 #include "stdlib.h"
 
+const int Vconst = 4;
+
 struct point//节点坐标结构体
 {
 	int x,y;//坐标
