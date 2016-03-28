@@ -10,6 +10,13 @@ Astack::Astack(void)
 
 Astack::~Astack(void)
 {
+	Astack * tempA;
+	while(next)
+	{
+		tempA = next;
+		next = tempA->next;
+		delete tempA;
+	}
 }
 //只计算上下左右的方案
 int Astack::conpute_F(const point & start,const point & end,Astack *p,Astack * futher)
@@ -57,7 +64,23 @@ int Astack::push(const point & start,const point & end,const point & point_n,Ast
 	return 1;//成功返回
 
 }
+int Astack::push(Astack *Astack_p)//将一个已有节点加入栈中
+{
+	Astack *q = NULL;
+	if (next==NULL)//下面是使用前插法进行链表的连接
+	{
+		next = Astack_p;
+		Astack_p->next = NULL;
+	}
+	else
+	{
+		q = next;
+		next = Astack_p;
+		Astack_p->next = q;
+	}
 
+	return 1;//成功返回
+}
 Astack *Astack::find_point(const point & point_n)
 {
 	Astack * p = next;
@@ -92,18 +115,21 @@ int Astack::delete_point(Astack *Astack_p)//传入要删除的节点地址
 {
 	int index = 0;
 	Astack *tempA = next;//wang：临时变量
-	Astack * p = next;//,*q = next;
+	Astack * p = next;//
 	if (p->next==NULL)//只有一个节点时
 	{
 		
-		p = NULL;//将栈置空
+		//p = NULL;//将栈置空
 		//delete p;//wang
+		p = NULL;
 		return 0;//栈空了
 	}
 	//wang: 保证要删除的点的前节点已知
 	if (p->data.x==Astack_p->data.x&&p->data.y==Astack_p->data.y)//第一个节点就是要删除的节点
 	{
-		next = next->next;//直接指向第二个节点
+		//next = next->next;//直接指向第二个节点
+		//tempA = p;
+		p = p->next;
 		//delete tempA;//wang:释放内存
 		return 1;
 	}
@@ -113,7 +139,7 @@ int Astack::delete_point(Astack *Astack_p)//传入要删除的节点地址
 	{
 		if (p->data.x==Astack_p->data.x&&p->data.y==Astack_p->data.y)//存在
 		{
-			tempA->next = p->next;//使用q直接指向p的下一个节点，达到删除的目的
+			tempA->next = p->next;//使用tempA直接指向p的下一个节点，达到删除的目的
 			//delete p;
 			return index;//返回删除的位置
 		}
@@ -173,7 +199,7 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 // 			{
 // 				open.push(A_map.start,A_map.end,n,p);//加入开启列表
 // 			}
-			if (i >= 4 && A_map.map[n.x][p->data.y]!=0 && A_map.map[p->data.x][n.y]!=0)
+			if (i >= 4 && (A_map.map[n.x][p->data.y]!=0 && A_map.map[p->data.x][n.y]!=0))
 			{
 				continue;//如果是斜方向移动, 不能从两个障碍对角穿过去
 			}
@@ -219,8 +245,8 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 		}
 		n.x = p->data.x;//将n的坐标还原为父节点
 		n.y = p->data.y;
-		close.push(A_map.start,A_map.end,n);//将父节点加入到关闭列表中
 		open.delete_point(p);//在开启列表删除父节点
+		close.push(p);//将父节点加入到关闭列表中
 		p  = open.get_Fmin();//重新得到open列表中F值最低的节点
 	}
 }
