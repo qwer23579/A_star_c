@@ -4,6 +4,8 @@
 #include "stdlib.h"
 #include "AStarMap.h"
 
+#define TESTMODEL
+
 const int VertV = 10;
 const int TiltV = 14;
 

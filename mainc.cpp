@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 
-#define TESTMODEL
+
 
 // 本程序使用A*算法编写，在VS系列开发平台编写，可以兼容VC系列开发软件，不可在TC系列开发平台上运行
 	//A*算法是一种静态路网中最高效的搜索最短路径的算法
@@ -22,7 +22,7 @@ void main()
 		int map_lenx = 20;
 		int map_leny = 20;
 		struct point start = {3,3};
-		struct point end = {16,16};
+		struct point end = {map_lenx-3,map_leny-5};
 		Astack open,close;
 
 #ifndef TESTMODEL

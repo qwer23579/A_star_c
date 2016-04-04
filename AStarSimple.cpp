@@ -190,7 +190,7 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 			getchar();
 			return 1;
 		}
-		for (int i = 0;i<8;i++)//分别扫描四个方向
+		for (int i = 0;i<7;i++)//分别扫描四个方向
 		{   
 			n.x =p->data.x;
 			n.y =p->data.y;
@@ -199,8 +199,14 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 // 			{
 // 				open.push(A_map.start,A_map.end,n,p);//加入开启列表
 // 			}
-			if (i >= 4 && (A_map.map[n.x][p->data.y]!=0 && A_map.map[p->data.x][n.y]!=0))
+			if (i >= 4 && (A_map.map[n.x][p->data.y]!=0 || A_map.map[p->data.x][n.y]!=0))
 			{
+				#ifdef TESTMODEL
+				{
+					printf("跳过节点：（%d,%d)，父节点为（%d,%d）\n",n.x,n.y,p->data.x,p->data.y);
+				}
+				#endif
+
 				continue;//如果是斜方向移动, 不能从两个障碍对角穿过去
 			}
 			if (A_map.map[n.x][n.y]==0 && !close.find_point(n))
