@@ -15,6 +15,8 @@
 #include "stdlib.h"
 #include "AStarSimple.h"
 
+#define MAINTEST
+
 void main()
 {
 // 	while (true)
@@ -23,10 +25,10 @@ void main()
 		int map_lenx = 20;
 		int map_leny = 20;
 		struct point start = {3,3};
-		struct point end = {map_lenx-3,map_leny-5};
+		struct point end = {map_lenx-3,map_leny-4};
 		Astack open, close;
 
-#ifndef TESTMODEL
+#ifndef MAINTEST
 		printf("A星算法静态路网最短路径！！！\n请输入地图行数，列数：(地图范围最好在3*3-100*100内)\n");
 		scanf("%d",&map_lenx);
 		scanf("%d",&map_leny);

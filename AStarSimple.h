@@ -6,6 +6,10 @@
 #include "AStarMap.h"
 
 #define TESTMODEL
+//#define FindTest
+
+using std::cout;
+using std::endl;
 
 const int VertV = 10;
 const int TiltV = 14;
@@ -42,7 +46,7 @@ public:
 	int conpute_F(const point & start,const point & end,node * p,node * futher);//计算一个节点的F值
 	int push(const point & start,const point & end,const point & point_n,node *F = NULL);//将一个新节点节点加入栈中（open列表）
 	int push(node *node_p);//将一个已有节点加入栈中(用于close列表)
-	node * find_point(const point & point_n);//查找栈中是否存在以n为坐标的节点
+	node * find_point(const point & point_n) const;//查找栈中是否存在以n为坐标的节点
 	node * get_Fmin();//得到一个f最小的节点，并返回这个节点的地址
 	int delete_point(node *node_p);//删除栈中一个节点，但是不释放。因为open中删除后会放入另外一个栈close中
 	point next_point(const point & point_n,int index = 0);//通过当前坐标m、和index所指示的方向计算下一个节点坐标

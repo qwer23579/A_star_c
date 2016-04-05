@@ -10,13 +10,16 @@ Astack::Astack(void)
 Astack::~Astack(void)
 {
 	node * tempA = NULL;
-	//Astack * tempp = next;
-	std::cout<<"释放"<<std::endl;
+#ifdef TESTMODEL
+	cout<<"释放"<<endl;
+#endif
 	while(head)
 	{
 		tempA = head;
 		head = head->next;
-		std::cout<<tempA -> x<<","<<tempA->y<<std::endl;
+	#ifdef TESTMODEL
+		cout<<tempA -> x<<","<<tempA->y<<endl;
+	#endif
 		delete tempA;		
 	}
 }
@@ -71,6 +74,7 @@ int Astack::push(const point & start,const point & end,const point & point_n,nod
 int Astack::push(node *node_p)//将一个已有节点加入栈中
 {
 	node *q = NULL;
+	node_p->next=NULL;
 	if (head==NULL)//下面是使用前插法进行链表的连接
 	{
 		head = node_p;
@@ -85,19 +89,37 @@ int Astack::push(node *node_p)//将一个已有节点加入栈中
 
 	return 1;//成功返回
 }
-node * Astack::find_point(const point & point_n)
+node * Astack::find_point(const point & point_n) const
 {
+#ifdef FindTest
+//	int count = 0;
+	cout<<"进入Find查找《《《"<<"   ";
+#endif
 	node * p = head;
-	while (p)//循环一直到栈的最后
+	while (p != NULL)//循环一直到栈的最后
 	{
+#ifdef FindTest
+		//count++;
+		//cout<<p->x<<","<<p->y<<","<<p->f<<"  ";
+#endif
 		if (p->x==point_n.x && p->y==point_n.y)//如果相等，就存在
 		{
+#ifdef FindTest
+			cout<<"退出Find查找》》》p"<<endl;
+#endif
 			return p;//返回查询代码1,代表栈中存在了这样的节点
-		#ifdef TESTMODEL
-		#endif
 		}
+#ifdef FindTest
+// 		if (count>400)
+// 		{
+// 			break;
+// 		}
+#endif
 		p = p->next;
 	}
+#ifdef FindTest
+	cout<<"退出Find查找》》》0"<<endl;
+#endif
 	return NULL;//返回查询代码0，代表不存在以n为坐标的节点
 }
 
@@ -111,17 +133,18 @@ node *Astack::get_Fmin()
 		{
 			f = p->f;
 			q = p;
-		#ifdef TESTMODEL
-		#endif
 		}
 		p = p->next;
 	}
+#ifdef TESTMODEL
+	cout<<"       "<<"min"<< q->x<<","<<q->y<<"f="<<q->f<<endl;
+#endif
 	return q;//返回找到的节点的地址
 }
 
 int Astack::delete_point(node *node_p)//传入要删除的节点地址
 {
-	int index = 0;
+	//int index = 0;
 	node *tempA = head;//wang：临时变量
 	node * p = head;//
 	if (p->next==NULL)//只有一个节点时
@@ -138,6 +161,7 @@ int Astack::delete_point(node *node_p)//传入要删除的节点地址
 		//next = next->next;//直接指向第二个节点
 		//tempA = p;
 		p = p->next;
+		tempA->next = NULL;
 		//delete tempA;//wang:释放内存
 		return 1;
 	}
@@ -149,7 +173,8 @@ int Astack::delete_point(node *node_p)//传入要删除的节点地址
 		{
 			tempA->next = p->next;//使用tempA直接指向p的下一个节点，达到删除的目的
 			//delete p;
-			return index;//返回删除的位置
+			p->next = NULL;
+			return 1;//返回删除的位置
 		}
 		tempA = p;
 		p = p->next;
@@ -178,6 +203,7 @@ point Astack::next_point(const point & point_n,int index)
 //扫描最短路径
 int scan(AStarMap & A_map,Astack & open,Astack & close)
 {
+	//system("mode con cols=150 lines=150");
 	open.push(A_map.start,A_map.end,A_map.start);//将开始节点压入开启列表
 	A_map.map[A_map.start.x][A_map.start.y] = 0;
 	A_map.map[A_map.end.x][A_map.end.y] = 0;
@@ -186,8 +212,12 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 /*	Astack *stacknew = new Astack;*/
 	node nodenew;
 	node *nodeold = NULL;
+	nodenew.next = NULL;
 	while (p)//进入死循环查找路径
 	{
+#ifdef TESTMODEL
+		cout<<"父节点"<<p->x<<","<<p->y<<"进入新的判断"<<endl;
+#endif
 		if (open.find_point(A_map.end)||open.head==NULL)//如果发现终点在开启列表的时候，找到了最短路径
 		{
 			printf("\n计算结束\n");//Wang
@@ -199,8 +229,14 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 			getchar();
 			return 1;
 		}
+#ifdef TESTMODEL
+		cout<<"扫描八个方向"<<endl;
+#endif
 		for (int i = 0;i<8;i++)//分别扫描四个方向
 		{   
+#ifdef TESTMODEL
+			cout<<"i="<<i<<endl;
+#endif
 			n.x =p->x;
 			n.y =p->y;
 			n= open.next_point(n,i);//根据x指示的方向得到下一个扫描点的坐标
@@ -216,11 +252,17 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 			#endif
 				continue;//如果是斜方向移动, 不能从两个障碍对角穿过去
 			}
+#ifdef TESTMODEL
+			cout<<"考察点"<<n.x<<","<<n.y<<endl;
+#endif
 			if (A_map.map[n.x][n.y]< Obstacle && !close.find_point(n))
 			{
 				if (!open.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
 				{
 					open.push(A_map.start,A_map.end,n,p);//加入开启列表
+				#ifdef TESTMODEL
+					cout<<n.x<<n.y<<"加入open"<<endl;
+				#endif
 				}
 				//重新计算f值，并看是否需要更新父节点
 				else
@@ -251,6 +293,9 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 						nodeold->h = nodenew.h;
 						nodeold->f = nodenew.f;
 						nodeold->futher = p;
+					#ifdef TESTMODEL
+						cout<<n.x<<","<<n.y<<"被重新评估"<<endl;
+					#endif
 					}
 				}
 			}
@@ -259,7 +304,11 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 		n.y = p->y;
 		open.delete_point(p);//在开启列表删除父节点
 		close.push(p);//将父节点加入到关闭列表中
-		p  = open.get_Fmin();//重新得到open列表中F值最低的节点
+		//close.push(A_map.start,A_map.end,n,p);
+	#ifdef TESTMODEL
+		cout<<p->x<<","<<p->y<<"放入close列表"<<endl;
+	#endif
+		p = open.get_Fmin();//重新得到open列表中F值最低的节点
 	}
 }
 
