@@ -1,8 +1,12 @@
 ﻿// A_star_c0322.cpp : 定义控制台应用程序的入口点。
 
 #include "stdafx.h"
-#include <vld.h>
+//#include <vld.h>
+#include "stdio.h"
+#include "time.h"
+#include "stdlib.h"
 
+#include "AStarSimple.h"
 
 
 // 本程序使用A*算法编写，在VS系列开发平台编写，可以兼容VC系列开发软件，不可在TC系列开发平台上运行
@@ -10,10 +14,7 @@
 	//核心思想是：启发式搜索，最最核心的是估价函数F（评估值） = G（父节点到自己的代价）+H（自己到终点的理论距离）
 	//学习了A*算法也就同时学习了迪科特斯拉算法（就是数据结构课本上的方法），因为特斯拉算法是A*算法的一种特殊情况
 	//特殊点在于特斯拉算法没有启发式搜索，也就是估价函数F= G+H中的H永远等于0，即变成了特斯拉算法
-#include "stdio.h"
-#include "time.h"
-#include "stdlib.h"
-#include "AStarSimple.h"
+
 
 #define MAINTEST
 
@@ -25,8 +26,9 @@ void main()
 		int map_lenx = 20;
 		int map_leny = 20;
 		struct point start = {3,3};
-		struct point end = {map_lenx-3,map_leny-4};
+		struct point end = {map_lenx-2,map_leny-3};
 		Astack open, close;
+
 
 #ifndef MAINTEST
 		printf("A星算法静态路网最短路径！！！\n请输入地图行数，列数：(地图范围最好在3*3-100*100内)\n");

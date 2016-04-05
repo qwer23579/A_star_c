@@ -92,33 +92,34 @@ int Astack::push(node *node_p)//将一个已有节点加入栈中
 node * Astack::find_point(const point & point_n) const
 {
 #ifdef FindTest
-//	int count = 0;
-	cout<<"进入Find查找《《《"<<"   ";
+	int count = 0;
+	std::ofstream outFile;
+	outFile.open("data.txt");
+	outFile<<"进入Find查找《《《"<<endl;
 #endif
 	node * p = head;
+
 	while (p != NULL)//循环一直到栈的最后
 	{
 #ifdef FindTest
-		//count++;
-		//cout<<p->x<<","<<p->y<<","<<p->f<<"  ";
+		count++;
+		if (count<200)
+		{
+			outFile<<p->x<<"\t"<<p->y<<"\t"<<p->f<<endl;
+		}
 #endif
 		if (p->x==point_n.x && p->y==point_n.y)//如果相等，就存在
 		{
 #ifdef FindTest
 			cout<<"退出Find查找》》》p"<<endl;
+			outFile<<"退出Find查找》》》p"<<endl;
 #endif
 			return p;//返回查询代码1,代表栈中存在了这样的节点
 		}
-#ifdef FindTest
-// 		if (count>400)
-// 		{
-// 			break;
-// 		}
-#endif
 		p = p->next;
 	}
 #ifdef FindTest
-	cout<<"退出Find查找》》》0"<<endl;
+	outFile<<"退出Find查找》》》0"<<endl;
 #endif
 	return NULL;//返回查询代码0，代表不存在以n为坐标的节点
 }
@@ -148,8 +149,7 @@ int Astack::delete_point(node *node_p)//传入要删除的节点地址
 	node *tempA = head;//wang：临时变量
 	node * p = head;//
 	if (p->next==NULL)//只有一个节点时
-	{
-		
+	{	
 		//p = NULL;//将栈置空
 		//delete p;//wang
 		p = NULL;
@@ -239,11 +239,12 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 #endif
 			n.x =p->x;
 			n.y =p->y;
-			n= open.next_point(n,i);//根据x指示的方向得到下一个扫描点的坐标
+			n = open.next_point(n,i);//根据x指示的方向得到下一个扫描点的坐标
 // 			if (A_map.map[n.x][n.y]==0&&!open.find_point(n)&&!close.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
 // 			{
 // 				open.push(A_map.start,A_map.end,n,p);//加入开启列表
 // 			}
+			//cout<<n.x<<","<<n.y<<"  ";
 			if (i >= 4 && ((A_map.map[n.x][p->y] == Obstacle) || (A_map.map[p->x][n.y] == Obstacle)))
 			{
 			#ifdef TESTMODEL
@@ -257,7 +258,7 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 #endif
 			if (A_map.map[n.x][n.y]< Obstacle && !close.find_point(n))
 			{
-				if (!open.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
+				if(!open.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
 				{
 					open.push(A_map.start,A_map.end,n,p);//加入开启列表
 				#ifdef TESTMODEL

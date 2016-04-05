@@ -3,9 +3,10 @@
 #include "time.h"
 #include "stdlib.h"
 #include <iostream>
+#include <fstream>
 #include "AStarMap.h"
 
-#define TESTMODEL
+//#define TESTMODEL
 //#define FindTest
 
 using std::cout;
@@ -13,6 +14,7 @@ using std::endl;
 
 const int VertV = 10;
 const int TiltV = 14;
+
 
 class Astack;
 
