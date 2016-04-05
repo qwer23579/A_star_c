@@ -4,94 +4,93 @@
 
 Astack::Astack(void)
 {
-	next = NULL;
-	futher = NULL;
-	data.x=666;
+	head = NULL;
 }
 
 Astack::~Astack(void)
 {
-	Astack * tempA = NULL;
+	node * tempA = NULL;
 	//Astack * tempp = next;
 	std::cout<<"释放"<<std::endl;
-	while(next)
+	while(head)
 	{
-		tempA = next;
-		next = next->next;
-		std::cout<<tempA->data.x<<","<<tempA->data.y<<std::endl;
-		delete tempA;
-		
+		tempA = head;
+		head = head->next;
+		std::cout<<tempA -> x<<","<<tempA->y<<std::endl;
+		delete tempA;		
 	}
 }
 //只计算上下左右的方案
-int Astack::conpute_F(const point & start,const point & end,Astack *p,Astack * futher)
+int Astack::conpute_F(const point & start,const point & end,node * p,node * futher)
 {
-	if (p->data.x==start.x&&p->data.y==start.y||futher==NULL)//如果父亲节点为空，或当前节点为起点
+	if (p->x==start.x && p->y==start.y||futher==NULL)//如果父亲节点为空，或当前节点为起点
 	{
-		p->data.g = 0;
-		p->data.h = 0;//将f，g值置0，而h值得话，因为永远不会使用到，所以是什么值不所谓
-		p->data.f =0;
+		p->g = 0;
+		p->h = 0;//将f，g值置0，而h值得话，因为永远不会使用到，所以是什么值不所谓
+		p->f = 0;
 		return 1;//返回值问题
 	}
-	int jug = (abs(p->data.x - futher->data.x) + abs(p->data.y - futher->data.y)) == 2 ? TiltV : VertV;
-	p->data.g = futher->data.g + jug;//当前节点的g值总比父节点的g值大G，因为他们相距一个距离
-	int diag = std::min(abs(end.x - p->data.x),abs(end.y - p->data.y));
-	int stra = abs(end.x - p->data.x) + abs(end.y - p->data.y);
-	p->data.h =TiltV*diag + VertV*(stra - 2 * diag);//预估代价h是根据对X，Y坐标相减的绝对值相加得到的
+	int jug = (abs(p->x - futher->x) + abs(p->y - futher->y)) == 2 ? TiltV : VertV;
+	p->g = futher->g + jug;//当前节点的g值总比父节点的g值大G，因为他们相距一个距离
+	int diag = std::min(abs(end.x - p->x),abs(end.y - p->y));
+	int stra = abs(end.x - p->x) + abs(end.y - p->y);
+	p->h =TiltV*diag + VertV*(stra - 2 * diag);//预估代价h是根据对X，Y坐标相减的绝对值相加得到的
 	//同时这也是启发式搜索的关键，对于估价函数的选取呢，还有很多的方法
-	p->data.f =p->data.g+p->data.h;//将两个值h，g加起来得到本节点的评估值f
+	p->f =p->g + p->h;//将两个值h，g加起来得到本节点的评估值f
 
-	return p->data.f;//成功返回
+	return p->f;//成功返回
 
 }
 
-int Astack::push(const point & start,const point & end,const point & point_n,Astack *F)//F为父节点默认为空，这只是习惯问题//插入头结点之后
+int Astack::push(const point & start,const point & end,const point & point_n,node *F)//F为父节点默认为空，这只是习惯问题//插入头结点之后
 {
 	//Astack * p  = (Astack *)malloc(sizeof(Astack));//申请一个结构体空间
-	Astack * p  = new Astack;
-	Astack *q = NULL;
-	p->data.x = point_n.x;//加入坐标值
-	p->data.y = point_n.y;
+	node * p  = new node;
+	node * q = NULL;
+
+	p-> next = NULL;
+	p-> futher = NULL;
+	p-> x = point_n.x;//加入坐标值
+	p-> y = point_n.y;
 	conpute_F(start,end,p,F);//根据父节点F计算p节点坐标为n.x和n.y的F值
 	p->futher = F;//反指父节点，这一点非常重要，重要，重要
-	if (next==NULL)//下面是使用前插法进行链表的连接
+	if (head==NULL)//下面是使用前插法进行链表的连接
 	{
-		next = p;
-		p->next = NULL;
+		head = p;
 	}
 	else
 	{
-		q = next;
-		next = p;
+		q = head;
+		head = p;
 		p->next = q;
 	}
 
 	return 1;//成功返回
 
 }
-int Astack::push(Astack *Astack_p)//将一个已有节点加入栈中
+int Astack::push(node *node_p)//将一个已有节点加入栈中
 {
-	Astack *q = NULL;
-	if (next==NULL)//下面是使用前插法进行链表的连接
+	node *q = NULL;
+	if (head==NULL)//下面是使用前插法进行链表的连接
 	{
-		next = Astack_p;
-		Astack_p->next = NULL;
+		head = node_p;
+		node_p->next = NULL;
 	}
 	else
 	{
-		q = next;
-		next = Astack_p;
-		Astack_p->next = q;
+		q = head;
+		head = node_p;
+		node_p->next = q;
 	}
 
 	return 1;//成功返回
 }
-Astack *Astack::find_point(const point & point_n)
+node * Astack::find_point(const point & point_n)
 {
-	Astack * p = next;
+	node * p = head;
 	while (p)//循环一直到栈的最后
 	{
-		if (p->data.x==point_n.x&&p->data.y==point_n.y)//如果相等，就存在
+		if (p->x==point_n.x && p->y==point_n.y)//如果相等，就存在
 		{
 			return p;//返回查询代码1,代表栈中存在了这样的节点
 		#ifdef TESTMODEL
@@ -102,15 +101,15 @@ Astack *Astack::find_point(const point & point_n)
 	return NULL;//返回查询代码0，代表不存在以n为坐标的节点
 }
 
-Astack *Astack::get_Fmin()
+node *Astack::get_Fmin()
 {
 	int f = 32500;//设置一个极大数，当作f，在栈中，只要比他小，就记录栈中的那个节点的位置
-	Astack * p = next,*q = NULL ;
+	node * p = head , *q = NULL ;
 	while (p)
 	{
-		if (p->data.f<=f)
+		if (p->f <= f)
 		{
-			f = p->data.f;
+			f = p->f;
 			q = p;
 		#ifdef TESTMODEL
 		#endif
@@ -120,11 +119,11 @@ Astack *Astack::get_Fmin()
 	return q;//返回找到的节点的地址
 }
 
-int Astack::delete_point(Astack *Astack_p)//传入要删除的节点地址
+int Astack::delete_point(node *node_p)//传入要删除的节点地址
 {
 	int index = 0;
-	Astack *tempA = next;//wang：临时变量
-	Astack * p = next;//
+	node *tempA = head;//wang：临时变量
+	node * p = head;//
 	if (p->next==NULL)//只有一个节点时
 	{
 		
@@ -134,7 +133,7 @@ int Astack::delete_point(Astack *Astack_p)//传入要删除的节点地址
 		return 0;//栈空了
 	}
 	//wang: 保证要删除的点的前节点已知
-	if (p->data.x==Astack_p->data.x&&p->data.y==Astack_p->data.y)//第一个节点就是要删除的节点
+	if (p->x==node_p->x && p->y==node_p->y)//第一个节点就是要删除的节点
 	{
 		//next = next->next;//直接指向第二个节点
 		//tempA = p;
@@ -146,7 +145,7 @@ int Astack::delete_point(Astack *Astack_p)//传入要删除的节点地址
 
 	while (p)
 	{
-		if (p->data.x==Astack_p->data.x&&p->data.y==Astack_p->data.y)//存在
+		if (p->x==node_p->x && p->y==node_p->y)//存在
 		{
 			tempA->next = p->next;//使用tempA直接指向p的下一个节点，达到删除的目的
 			//delete p;
@@ -182,18 +181,18 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 	open.push(A_map.start,A_map.end,A_map.start);//将开始节点压入开启列表
 	A_map.map[A_map.start.x][A_map.start.y] = 0;
 	A_map.map[A_map.end.x][A_map.end.y] = 0;
-	Astack * p  = open.get_Fmin(),*q = NULL;//得到open列表中F值最低的节点
+	node * p  = open.get_Fmin(),*q = NULL;//得到open列表中F值最低的节点
 	point n;
 /*	Astack *stacknew = new Astack;*/
-	Astack stacknew;
-	Astack *stackold = NULL;
+	node nodenew;
+	node *nodeold = NULL;
 	while (p)//进入死循环查找路径
 	{
-		if (open.find_point(A_map.end)||open.next==NULL)//如果发现终点在开启列表的时候，找到了最短路径
+		if (open.find_point(A_map.end)||open.head==NULL)//如果发现终点在开启列表的时候，找到了最短路径
 		{
 			printf("\n计算结束\n");//Wang
 			show_map(A_map,open,close);//显示
-			if (open.next==NULL)//当开启列表为空时，代表没有路径可以到达终点
+			if (open.head==NULL)//当开启列表为空时，代表没有路径可以到达终点
 			{
 				printf("地图不可到达\n");//Wang：若有且只有一条路径呢？
 			}
@@ -202,17 +201,17 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 		}
 		for (int i = 0;i<8;i++)//分别扫描四个方向
 		{   
-			n.x =p->data.x;
-			n.y =p->data.y;
+			n.x =p->x;
+			n.y =p->y;
 			n= open.next_point(n,i);//根据x指示的方向得到下一个扫描点的坐标
 // 			if (A_map.map[n.x][n.y]==0&&!open.find_point(n)&&!close.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
 // 			{
 // 				open.push(A_map.start,A_map.end,n,p);//加入开启列表
 // 			}
-			if (i >= 4 && ((A_map.map[n.x][p->data.y] == Obstacle) && (A_map.map[p->data.x][n.y] == Obstacle)))
+			if (i >= 4 && ((A_map.map[n.x][p->y] == Obstacle) || (A_map.map[p->x][n.y] == Obstacle)))
 			{
 			#ifdef TESTMODEL
-				printf("跳过节点：（%d,%d)，父节点为（%d,%d）\n",n.x,n.y,p->data.x,p->data.y);
+				printf("跳过节点：（%d,%d)，父节点为（%d,%d）\n",n.x,n.y,p->x,p->y);
 				//show_map(A_map,open,close);//显示
 			#endif
 				continue;//如果是斜方向移动, 不能从两个障碍对角穿过去
@@ -242,22 +241,22 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 // 						stackold->data.f = f;
 // 						stackold->futher = p;
 // 					}
-					stackold = open.find_point(n);
-					stacknew.data.x = n.x ;
-					stacknew.data.y = n.y;
-					open.conpute_F(A_map.start,A_map.end,&stacknew,p);//根据父节点F计算p节点坐标为n.x和n.y的F值
-					if (stacknew.data.f<stackold->data.f)
+					nodeold = open.find_point(n);
+					nodenew.x = n.x ;
+					nodenew.y = n.y;
+					open.conpute_F(A_map.start,A_map.end,&nodenew,p);//根据父节点F计算p节点坐标为n.x和n.y的F值
+					if (nodenew.f < nodeold->f)
 					{
-						stackold->data.g = stacknew.data.g;
-						stackold->data.h = stacknew.data.h;
-						stackold->data.f = stacknew.data.f;
-						stackold->futher = p;
+						nodeold->g = nodenew.g;
+						nodeold->h = nodenew.h;
+						nodeold->f = nodenew.f;
+						nodeold->futher = p;
 					}
 				}
 			}
 		}
-		n.x = p->data.x;//将n的坐标还原为父节点
-		n.y = p->data.y;
+		n.x = p->x;//将n的坐标还原为父节点
+		n.y = p->y;
 		open.delete_point(p);//在开启列表删除父节点
 		close.push(p);//将父节点加入到关闭列表中
 		p  = open.get_Fmin();//重新得到open列表中F值最低的节点
@@ -271,22 +270,22 @@ void show_map(AStarMap & A_map,Astack & open,Astack & close)//显示地图的函
 		system("mode con cols=150 lines=150");
 	}
 	printf("当前开始起点为：%d,%d  终点为:%d,%d\n在地图中“一”号代表路径,“*”号代表在地图扫描过程中访问过的节点\n“□”代表通道，“■”代表墙壁\n", A_map.start.x, A_map.start.y, A_map.end.x, A_map.end.y);
-	Astack * p =open.find_point(A_map.end);//得到含有终点坐标的节点，使用它去通过futher指针反着遍历之前的节点，一直到起点，就得到了路径
-	Astack * k = open.next;
+	node * p = open.find_point(A_map.end);//得到含有终点坐标的节点，使用它去通过futher指针反着遍历之前的节点，一直到起点，就得到了路径
+	node * k = open.head;
 	while (k)//将开启列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
 	{
-		A_map.map[k->data.x][k->data.y] = 5;
+		A_map.map[k->x][k->y] = 5;
 		k = k->next;
 	}
-	k = close.next;
+	k = close.head;
 	while (k)//将关闭列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
 	{
-		A_map.map[k->data.x][k->data.y] = 6;
+		A_map.map[k->x][k->y] = 6;
 		k = k->next;
 	}
 	while (p)///将结束节点通过不断遍历futher指针到起点，所有节点包含的坐在map中标全部赋值2，表示他们是路径
 	{
-		A_map.map[p->data.x][p->data.y] = 2;
+		A_map.map[p->x][p->y] = 2;
 		p = p->futher;
 	}
 	A_map.map[A_map.start.x][A_map.start.y] = 10;//特殊标记起点终点
@@ -311,62 +310,62 @@ void show_map(AStarMap & A_map,Astack & open,Astack & close)//显示地图的函
 
 }
 #ifdef TESTMODEL
-	void show_error_map(AStarMap & A_map,Astack & open,Astack & close)//显示地图的函数
-	{
-		if (A_map.map_lenx>20||A_map.map_leny>20)//当迷宫地图行列大于20时，将屏幕尺寸加大为150*150的控制台窗口
-		{
-			system("mode con cols=150 lines=150");
-		}
-		printf("当前开始起点为：%d,%d  终点为:%d,%d\n在地图中“一”号代表路径,“*”号代表在地图扫描过程中访问过的节点\n“□”代表通道，“■”代表墙壁\n", A_map.start.x, A_map.start.y, A_map.end.x, A_map.end.y);
-//		Astack * p =open.find_point(A_map.end);//得到含有终点坐标的节点，使用它去通过futher指针反着遍历之前的节点，一直到起点，就得到了路径
-		
-		Astack * k = open.next;
-		std::cout<<"open:"<<std::endl;
-		while (k)//将开启列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
-		{
-// 			A_map.map[k->data.x][k->data.y] = 5;
-// 			k = k->next;
-			std::cout << k->data.x <<","<<k->data.y<<":"<<k->data.f<<"   ";
-			k = k->next;
-
-		}
-		std::cout<<std::endl;
-
-		k = close.next;
-		std::cout <<"close:"<<std::endl;
-		while (k)//将关闭列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
-		{
-// 			A_map.map[k->data.x][k->data.y] = 6;
-// 			k = k->next;
-			std::cout << k->data.x <<" "<<k->data.y<<":"<<k->data.f<<"    ";
-			k = k->next;
-		}
-		std::cout<<std::endl;
-// 		while (p)///将结束节点通过不断遍历futher指针到起点，所有节点包含的坐在map中标全部赋值2，表示他们是路径
+// 		void show_error_map(AStarMap & A_map,Astack & open,Astack & close)//显示地图的函数
 // 		{
-// 			A_map.map[p->data.x][p->data.y] = 2;
-// 			p = p->futher;
-// 		}
-// 		A_map.map[A_map.start.x][A_map.start.y] = 10;//特殊标记起点终点
-// 		A_map.map[A_map.end.x][A_map.end.y] = 11;
-// 		for (int x = 0 ;x<A_map.map_lenx;x++)//循环输出地图
-// 		{
-// 			for (int y = 0 ; y<A_map.map_leny;y++)
+// 			if (A_map.map_lenx>20||A_map.map_leny>20)//当迷宫地图行列大于20时，将屏幕尺寸加大为150*150的控制台窗口
 // 			{
-// 
-// 				switch (A_map.map[x][y])
-// 				{
-// 				case  0:{printf("□");break;}
-// 				case  2:{printf("一");break;}
-// 				case  5:{printf(" *");break;}
-// 				case  6:{printf(" @");break;}
-// 				case  10:{printf("起");break;}
-// 				case  11:{printf("终");break;}
-// 				case  Obstacle:{printf("■");break;}
-// 				}
+// 				system("mode con cols=150 lines=150");
 // 			}
-// 			printf("\n");
+// 			printf("当前开始起点为：%d,%d  终点为:%d,%d\n在地图中“一”号代表路径,“*”号代表在地图扫描过程中访问过的节点\n“□”代表通道，“■”代表墙壁\n", A_map.start.x, A_map.start.y, A_map.end.x, A_map.end.y);
+// 	//		Astack * p =open.find_point(A_map.end);//得到含有终点坐标的节点，使用它去通过futher指针反着遍历之前的节点，一直到起点，就得到了路径
+// 		
+// 			Astack * k = open.next;
+// 			std::cout<<"open:"<<std::endl;
+// 			while (k)//将开启列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
+// 			{
+// 		// 			A_map.map[k->data.x][k->data.y] = 5;
+// // 			k = k->next;
+// 				std::cout << k->data.x <<","<<k->data.y<<":"<<k->data.f<<"   ";
+// 				k = k->next;
+// 
+// 			}
+// 			std::cout<<std::endl;
+// 
+// 			k = close.next;
+// 			std::cout <<"close:"<<std::endl;
+// 			while (k)//将关闭列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
+// 			{
+// 		// 			A_map.map[k->data.x][k->data.y] = 6;
+// // 			k = k->next;
+// 				std::cout << k->data.x <<" "<<k->data.y<<":"<<k->data.f<<"    ";
+// 				k = k->next;
+// 			}
+// 			std::cout<<std::endl;
+// 																									// 		while (p)///将结束节点通过不断遍历futher指针到起点，所有节点包含的坐在map中标全部赋值2，表示他们是路径
+// // 		{
+// // 			A_map.map[p->data.x][p->data.y] = 2;
+// // 			p = p->futher;
+// // 		}
+// // 		A_map.map[A_map.start.x][A_map.start.y] = 10;//特殊标记起点终点
+// // 		A_map.map[A_map.end.x][A_map.end.y] = 11;
+// // 		for (int x = 0 ;x<A_map.map_lenx;x++)//循环输出地图
+// // 		{
+// // 			for (int y = 0 ; y<A_map.map_leny;y++)
+// // 			{
+// // 
+// // 				switch (A_map.map[x][y])
+// // 				{
+// // 				case  0:{printf("□");break;}
+// // 				case  2:{printf("一");break;}
+// // 				case  5:{printf(" *");break;}
+// // 				case  6:{printf(" @");break;}
+// // 				case  10:{printf("起");break;}
+// // 				case  11:{printf("终");break;}
+// // 				case  Obstacle:{printf("■");break;}
+// // 				}
+// // 			}
+// // 			printf("\n");
+// // 		}
+// 
 // 		}
-
-	}
 #endif
