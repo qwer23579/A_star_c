@@ -237,7 +237,7 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 #ifdef TESTMODEL
 		cout<<"扫描八个方向"<<endl;
 #endif
-		for (int i = 0;i<4;i++)//分别扫描四个方向
+		for (int i = 0;i<8;i++)//分别扫描四个方向
 		{   
 #ifdef TESTMODEL
 			cout<<"i="<<i<<endl;
@@ -250,7 +250,7 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 // 				open.push(A_map.start,A_map.end,n,p);//加入开启列表
 // 			}
 			//cout<<n.x<<","<<n.y<<"  ";
-			if (i >= 4 && ((A_map.map[n.x][p->y] == Obstacle) && (A_map.map[p->x][n.y] == Obstacle)))
+			if (i >= 4 && ((A_map.map[n.x][p->y] == Obstacle) || (A_map.map[p->x][n.y] == Obstacle)))
 			{
 			#ifdef TESTMODEL
 				printf("跳过节点：（%d,%d)，父节点为（%d,%d）\n",n.x,n.y,p->x,p->y);
