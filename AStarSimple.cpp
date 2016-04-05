@@ -99,7 +99,6 @@ node * Astack::find_point(const point & point_n) const
 	cout<<"进入Find查找《《《"<<endl;
 #endif
 	node * p = head;
-
 	while (p != NULL)//循环一直到栈的最后
 	{
 #ifdef FindTest
@@ -133,7 +132,7 @@ node *Astack::get_Fmin()
 	while (p)
 	{
 #ifdef TESTMODEL
-		cout<<p->x<<p->y<<"min"<<endl;
+		//cout<<p->x<<","<<p->y<<"min"<<endl;
 #endif
 		if (p->f <= f)
 		{
@@ -142,9 +141,6 @@ node *Astack::get_Fmin()
 		}
 		p = p->next;
 	}
-#ifdef TESTMODEL
-	//cout<<"       "<<"min"<<endl;
-#endif
 	return q;//返回找到的节点的地址
 }
 
@@ -162,8 +158,6 @@ int Astack::delete_point(node *node_p)//传入要删除的节点地址
 	//wang: 保证要删除的点的前节点已知
 	if (head->x==node_p->x && head->y==node_p->y)//第一个节点就是要删除的节点
 	{
-		//next = next->next;//直接指向第二个节点
-		//tempA = p;
 		head = head->next;
 		tempA->next = NULL;
 		//delete tempA;//wang:释放内存
@@ -199,7 +193,6 @@ point Astack::next_point(const point & point_n,int index)
 		case 5: {near_n.x = point_n.x-1,near_n.y = point_n.y+1;break;}//东北
 		case 6: {near_n.x = point_n.x+1,near_n.y = point_n.y-1;break;}//西南
 		case 7: {near_n.x = point_n.x-1,near_n.y = point_n.y-1;break;}//西北
-
 	}
 	return near_n;	//返回生成的节点
 }
@@ -213,15 +206,13 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 	A_map.map[A_map.end.x][A_map.end.y] = 0;
 	node * p  = open.get_Fmin(),*q = NULL;//得到open列表中F值最低的节点
 	point n;
-/*	Astack *stacknew = new Astack;*/
 	node nodenew;
 	node *nodeold = NULL;
 	nodenew.next = NULL;
 	while (1)//进入死循环查找路径
 	{
 #ifdef TESTMODEL
-		//cout<<"父节点"<<p->x<<","<<p->y<<"进入新的判断"<<endl;
-		printf("\n111\n");//Wang
+		cout<<"       "<<"父节点"<<p->x<<","<<p->y<<"进入新的判断"<<endl;
 #endif
 		if (open.find_point(A_map.end)||open.head==NULL)//如果发现终点在开启列表的时候，找到了最短路径
 		{
@@ -234,9 +225,6 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 			getchar();
 			return 1;
 		}
-#ifdef TESTMODEL
-		cout<<"扫描八个方向"<<endl;
-#endif
 		for (int i = 0;i<8;i++)//分别扫描四个方向
 		{   
 #ifdef TESTMODEL
@@ -245,11 +233,6 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 			n.x =p->x;
 			n.y =p->y;
 			n = open.next_point(n,i);//根据x指示的方向得到下一个扫描点的坐标
-// 			if (A_map.map[n.x][n.y]==0&&!open.find_point(n)&&!close.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
-// 			{
-// 				open.push(A_map.start,A_map.end,n,p);//加入开启列表
-// 			}
-			//cout<<n.x<<","<<n.y<<"  ";
 			if (i >= 4 && ((A_map.map[n.x][p->y] == Obstacle) || (A_map.map[p->x][n.y] == Obstacle)))
 			{
 			#ifdef TESTMODEL
@@ -267,28 +250,12 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 				{
 					open.push(A_map.start,A_map.end,n,p);//加入开启列表
 				#ifdef TESTMODEL
-					cout<<n.x<<n.y<<"加入open"<<endl;
+					cout<<n.x<<","<<n.y<<"加入open"<<endl;
 				#endif
 				}
 				//重新计算f值，并看是否需要更新父节点
 				else
 				{
-// 					stackold = open.find_point(n);
-// 					int jug = (abs(p->data.x - n.x) + abs(p->data.x - n.y)) == 2 ? VertV : TiltV;
-// 					int g = p->data.g + jug;//当前节点的g值总比父节点的g值大G，因为他们相距一个距离
-// 					int diag = std::min(abs(A_map.end.x - n.x),abs(A_map.end.y - n.y));
-// 					int stra = abs(A_map.end.x - n.x) + abs(A_map.end.y - n.y);
-// 					int h =TiltV*diag + VertV*(stra - 2 * diag);
-// 					//int h =VertV*abs(A_map.end.x - n.x)+VertV*abs(A_map.end.y - n.y);//预估代价h是根据对X，Y坐标相减的绝对值相加得到的
-// 					//同时这也是启发式搜索的关键，对于估价函数的选取呢，还有很多的方法
-// 					int f = g + h;//将两个值h，g加起来得到本节点的评估值f
-// 
-// 
-// 					if (stackold->data.f > f)
-// 					{
-// 						stackold->data.f = f;
-// 						stackold->futher = p;
-// 					}
 					nodeold = open.find_point(n);
 					nodenew.x = n.x ;
 					nodenew.y = n.y;
@@ -310,10 +277,8 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 		n.y = p->y;
 		open.delete_point(p);//在开启列表删除父节点
 		close.push(p);//将父节点加入到关闭列表中
-		//close.push(A_map.start,A_map.end,n,p);
 	#ifdef TESTMODEL
-		//cout<<p->x<<","<<p->y<<"放入close列表"<<endl;
-		printf("\n222\n");//Wang
+		cout<<p->x<<","<<p->y<<"放入close列表"<<endl;
 	#endif
 		p = open.get_Fmin();//重新得到open列表中F值最低的节点
 	}
@@ -365,63 +330,3 @@ void show_map(AStarMap & A_map,Astack & open,Astack & close)//显示地图的函
 	}
 
 }
-#ifdef TESTMODEL
-// 		void show_error_map(AStarMap & A_map,Astack & open,Astack & close)//显示地图的函数
-// 		{
-// 			if (A_map.map_lenx>20||A_map.map_leny>20)//当迷宫地图行列大于20时，将屏幕尺寸加大为150*150的控制台窗口
-// 			{
-// 				system("mode con cols=150 lines=150");
-// 			}
-// 			printf("当前开始起点为：%d,%d  终点为:%d,%d\n在地图中“一”号代表路径,“*”号代表在地图扫描过程中访问过的节点\n“□”代表通道，“■”代表墙壁\n", A_map.start.x, A_map.start.y, A_map.end.x, A_map.end.y);
-// 	//		Astack * p =open.find_point(A_map.end);//得到含有终点坐标的节点，使用它去通过futher指针反着遍历之前的节点，一直到起点，就得到了路径
-// 		
-// 			Astack * k = open.next;
-// 			std::cout<<"open:"<<std::endl;
-// 			while (k)//将开启列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
-// 			{
-// 		// 			A_map.map[k->data.x][k->data.y] = 5;
-// // 			k = k->next;
-// 				std::cout << k->data.x <<","<<k->data.y<<":"<<k->data.f<<"   ";
-// 				k = k->next;
-// 
-// 			}
-// 			std::cout<<std::endl;
-// 
-// 			k = close.next;
-// 			std::cout <<"close:"<<std::endl;
-// 			while (k)//将关闭列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
-// 			{
-// 		// 			A_map.map[k->data.x][k->data.y] = 6;
-// // 			k = k->next;
-// 				std::cout << k->data.x <<" "<<k->data.y<<":"<<k->data.f<<"    ";
-// 				k = k->next;
-// 			}
-// 			std::cout<<std::endl;
-// 																									// 		while (p)///将结束节点通过不断遍历futher指针到起点，所有节点包含的坐在map中标全部赋值2，表示他们是路径
-// // 		{
-// // 			A_map.map[p->data.x][p->data.y] = 2;
-// // 			p = p->futher;
-// // 		}
-// // 		A_map.map[A_map.start.x][A_map.start.y] = 10;//特殊标记起点终点
-// // 		A_map.map[A_map.end.x][A_map.end.y] = 11;
-// // 		for (int x = 0 ;x<A_map.map_lenx;x++)//循环输出地图
-// // 		{
-// // 			for (int y = 0 ; y<A_map.map_leny;y++)
-// // 			{
-// // 
-// // 				switch (A_map.map[x][y])
-// // 				{
-// // 				case  0:{printf("□");break;}
-// // 				case  2:{printf("一");break;}
-// // 				case  5:{printf(" *");break;}
-// // 				case  6:{printf(" @");break;}
-// // 				case  10:{printf("起");break;}
-// // 				case  11:{printf("终");break;}
-// // 				case  Obstacle:{printf("■");break;}
-// // 				}
-// // 			}
-// // 			printf("\n");
-// // 		}
-// 
-// 		}
-#endif

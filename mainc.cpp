@@ -16,7 +16,7 @@
 	//特殊点在于特斯拉算法没有启发式搜索，也就是估价函数F= G+H中的H永远等于0，即变成了特斯拉算法
 
 
-//#define MAINTEST
+#define MAINTEST
 
 void main()
 {
