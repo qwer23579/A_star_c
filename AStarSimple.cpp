@@ -1,21 +1,26 @@
 ﻿#include "StdAfx.h"
-#include "AStarSimple.h"
 #include <algorithm>
+#include "AStarSimple.h"
 
 Astack::Astack(void)
 {
 	next = NULL;
 	futher = NULL;
+	data.x=666;
 }
 
 Astack::~Astack(void)
 {
-	Astack * tempA;
+	Astack * tempA = NULL;
+	//Astack * tempp = next;
+	std::cout<<"释放"<<std::endl;
 	while(next)
 	{
 		tempA = next;
-		next = tempA->next;
+		next = next->next;
+		std::cout<<tempA->data.x<<","<<tempA->data.y<<std::endl;
 		delete tempA;
+		
 	}
 }
 //只计算上下左右的方案
@@ -89,6 +94,8 @@ Astack *Astack::find_point(const point & point_n)
 		if (p->data.x==point_n.x&&p->data.y==point_n.y)//如果相等，就存在
 		{
 			return p;//返回查询代码1,代表栈中存在了这样的节点
+		#ifdef TESTMODEL
+		#endif
 		}
 		p = p->next;
 	}
@@ -105,6 +112,8 @@ Astack *Astack::get_Fmin()
 		{
 			f = p->data.f;
 			q = p;
+		#ifdef TESTMODEL
+		#endif
 		}
 		p = p->next;
 	}
@@ -177,11 +186,12 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 	point n;
 /*	Astack *stacknew = new Astack;*/
 	Astack stacknew;
-	Astack *stackold;
-	while (true)//进入死循环查找路径
+	Astack *stackold = NULL;
+	while (p)//进入死循环查找路径
 	{
 		if (open.find_point(A_map.end)||open.next==NULL)//如果发现终点在开启列表的时候，找到了最短路径
 		{
+			printf("\n计算结束\n");//Wang
 			show_map(A_map,open,close);//显示
 			if (open.next==NULL)//当开启列表为空时，代表没有路径可以到达终点
 			{
@@ -190,7 +200,7 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 			getchar();
 			return 1;
 		}
-		for (int i = 0;i<7;i++)//分别扫描四个方向
+		for (int i = 0;i<8;i++)//分别扫描四个方向
 		{   
 			n.x =p->data.x;
 			n.y =p->data.y;
@@ -199,17 +209,15 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 // 			{
 // 				open.push(A_map.start,A_map.end,n,p);//加入开启列表
 // 			}
-			if (i >= 4 && (A_map.map[n.x][p->data.y]!=0 || A_map.map[p->data.x][n.y]!=0))
+			if (i >= 4 && ((A_map.map[n.x][p->data.y] == Obstacle) && (A_map.map[p->data.x][n.y] == Obstacle)))
 			{
-				#ifdef TESTMODEL
-				{
-					printf("跳过节点：（%d,%d)，父节点为（%d,%d）\n",n.x,n.y,p->data.x,p->data.y);
-				}
-				#endif
-
+			#ifdef TESTMODEL
+				printf("跳过节点：（%d,%d)，父节点为（%d,%d）\n",n.x,n.y,p->data.x,p->data.y);
+				//show_map(A_map,open,close);//显示
+			#endif
 				continue;//如果是斜方向移动, 不能从两个障碍对角穿过去
 			}
-			if (A_map.map[n.x][n.y]==0 && !close.find_point(n))
+			if (A_map.map[n.x][n.y]< Obstacle && !close.find_point(n))
 			{
 				if (!open.find_point(n))//当前坐标n不在开启列表，关闭列表，且为0
 				{
@@ -240,7 +248,6 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 					open.conpute_F(A_map.start,A_map.end,&stacknew,p);//根据父节点F计算p节点坐标为n.x和n.y的F值
 					if (stacknew.data.f<stackold->data.f)
 					{
-						
 						stackold->data.g = stacknew.data.g;
 						stackold->data.h = stacknew.data.h;
 						stackold->data.f = stacknew.data.f;
@@ -274,7 +281,7 @@ void show_map(AStarMap & A_map,Astack & open,Astack & close)//显示地图的函
 	k = close.next;
 	while (k)//将关闭列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
 	{
-		A_map.map[k->data.x][k->data.y] = 5;
+		A_map.map[k->data.x][k->data.y] = 6;
 		k = k->next;
 	}
 	while (p)///将结束节点通过不断遍历futher指针到起点，所有节点包含的坐在map中标全部赋值2，表示他们是路径
@@ -291,14 +298,75 @@ void show_map(AStarMap & A_map,Astack & open,Astack & close)//显示地图的函
 			switch (A_map.map[x][y])
 			{
 			case  0:{printf("□");break;}
-			case  1:{printf("■");break;}
 			case  2:{printf("一");break;}
 			case  5:{printf(" *");break;}
+			case  6:{printf(" @");break;}
 			case  10:{printf("起");break;}
 			case  11:{printf("终");break;}
+			case  Obstacle:{printf("■");break;}
 			}
 		}
 		printf("\n");
 	}
 
 }
+#ifdef TESTMODEL
+	void show_error_map(AStarMap & A_map,Astack & open,Astack & close)//显示地图的函数
+	{
+		if (A_map.map_lenx>20||A_map.map_leny>20)//当迷宫地图行列大于20时，将屏幕尺寸加大为150*150的控制台窗口
+		{
+			system("mode con cols=150 lines=150");
+		}
+		printf("当前开始起点为：%d,%d  终点为:%d,%d\n在地图中“一”号代表路径,“*”号代表在地图扫描过程中访问过的节点\n“□”代表通道，“■”代表墙壁\n", A_map.start.x, A_map.start.y, A_map.end.x, A_map.end.y);
+//		Astack * p =open.find_point(A_map.end);//得到含有终点坐标的节点，使用它去通过futher指针反着遍历之前的节点，一直到起点，就得到了路径
+		
+		Astack * k = open.next;
+		std::cout<<"open:"<<std::endl;
+		while (k)//将开启列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
+		{
+// 			A_map.map[k->data.x][k->data.y] = 5;
+// 			k = k->next;
+			std::cout << k->data.x <<","<<k->data.y<<":"<<k->data.f<<"   ";
+			k = k->next;
+
+		}
+		std::cout<<std::endl;
+
+		k = close.next;
+		std::cout <<"close:"<<std::endl;
+		while (k)//将关闭列表存在的节点包含的坐标在map中赋值5，表示访问过的坐标
+		{
+// 			A_map.map[k->data.x][k->data.y] = 6;
+// 			k = k->next;
+			std::cout << k->data.x <<" "<<k->data.y<<":"<<k->data.f<<"    ";
+			k = k->next;
+		}
+		std::cout<<std::endl;
+// 		while (p)///将结束节点通过不断遍历futher指针到起点，所有节点包含的坐在map中标全部赋值2，表示他们是路径
+// 		{
+// 			A_map.map[p->data.x][p->data.y] = 2;
+// 			p = p->futher;
+// 		}
+// 		A_map.map[A_map.start.x][A_map.start.y] = 10;//特殊标记起点终点
+// 		A_map.map[A_map.end.x][A_map.end.y] = 11;
+// 		for (int x = 0 ;x<A_map.map_lenx;x++)//循环输出地图
+// 		{
+// 			for (int y = 0 ; y<A_map.map_leny;y++)
+// 			{
+// 
+// 				switch (A_map.map[x][y])
+// 				{
+// 				case  0:{printf("□");break;}
+// 				case  2:{printf("一");break;}
+// 				case  5:{printf(" *");break;}
+// 				case  6:{printf(" @");break;}
+// 				case  10:{printf("起");break;}
+// 				case  11:{printf("终");break;}
+// 				case  Obstacle:{printf("■");break;}
+// 				}
+// 			}
+// 			printf("\n");
+// 		}
+
+	}
+#endif

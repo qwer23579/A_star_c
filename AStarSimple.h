@@ -2,6 +2,7 @@
 #include "stdio.h"
 #include "time.h"
 #include "stdlib.h"
+#include <iostream>
 #include "AStarMap.h"
 
 #define TESTMODEL
@@ -13,6 +14,11 @@ class Astack;
 
 int  scan(AStarMap & A_map,Astack & open,Astack & close);//扫描最短路径
 void show_map(AStarMap & A_map, Astack & open,Astack & close);//显示地图的函数
+
+#ifdef TESTMODEL
+void show_error_map(AStarMap & A_map, Astack & open,Astack & close);//显示地图的函数
+#endif
+
 
 struct node//基本节点，包含评估值
 {

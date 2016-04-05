@@ -4,7 +4,8 @@
 #include "time.h"
 #include "stdlib.h"
 
-const int Vconst = 4;
+const int Vconst = 2;
+const int Obstacle = 20;
 
 struct point//节点坐标结构体
 {

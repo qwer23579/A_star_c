@@ -1,6 +1,7 @@
 ﻿// A_star_c0322.cpp : 定义控制台应用程序的入口点。
 
 #include "stdafx.h"
+#include <vld.h>
 
 
 
@@ -16,41 +17,41 @@
 
 void main()
 {
-	while (true)
-	{
+// 	while (true)
+// 	{
 		//srand(time(NULL));//置随机函数种子,屏蔽后每次地图不变
-		int map_lenx = 20;
-		int map_leny = 20;
-		struct point start = {3,3};
-		struct point end = {map_lenx-3,map_leny-5};
+		int map_lenx = 7;
+		int map_leny = 6;
+		struct point start = {1,1};
+		struct point end = {map_lenx-2,map_leny-2};
 		Astack open,close;
 
 #ifndef TESTMODEL
+		printf("A星算法静态路网最短路径！！！\n请输入地图行数，列数：(地图范围最好在3*3-100*100内)\n");
+		scanf("%d",&map_lenx);
+		scanf("%d",&map_leny);
+		printf("请输入地图起点x,y：(起点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
+		scanf("%d",&start.x);
+		scanf("%d",&start.y);
+		printf("请输入地图终点x,y：(终点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
+		scanf("%d",&end.x);
+		scanf("%d",&end.y);
+		if (start.x>map_lenx-1||start.y>map_leny-1||end.x>map_lenx-1||end.y>map_leny-1)
 		{
-			printf("A星算法静态路网最短路径！！！\n请输入地图行数，列数：(地图范围最好在3*3-100*100内)\n");
-			scanf("%d",&map_lenx);
-			scanf("%d",&map_leny);
-			printf("请输入地图起点x,y：(起点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
-			scanf("%d",&start.x);
-			scanf("%d",&start.y);
-			printf("请输入地图终点x,y：(终点范围X:1-%d,Y1-%d)\n",map_lenx-2,map_leny-2);
-			scanf("%d",&end.x);
-			scanf("%d",&end.y);
-			if (start.x>map_lenx-1||start.y>map_leny-1||end.x>map_lenx-1||end.y>map_leny-1)
-			{
-				printf("起点或终点已在地图外，无法寻路!!!\n按任意键继续....\n");
-				getchar();
-				continue;
-			}
+			printf("起点或终点已在地图外，无法寻路!!!\n按任意键继续....\n");
+			getchar();
+			continue;
 		}
 #endif
 
-		AStarMap A_map(map_lenx,map_leny,start,end,0);//新建地图
+		AStarMap A_map(map_lenx,map_leny,start,end,1);//新建地图
 		//AStarMap A_map(map_lenx,map_leny,start,end,1);//固定测试地图
 		scan(A_map,open,close);//扫描路径
-		open.next = NULL;//置空开启列表和关闭列表
-		close.next = NULL;
-	}
+// 		open.next = NULL;//置空开启列表和关闭列表
+// 		close.next = NULL;
+		//std::cout<<"扫描结束";
+		//std::cin.get();
+/*	}*/
 }
 
 /*
