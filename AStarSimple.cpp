@@ -96,6 +96,7 @@ node * Astack::find_point(const point & point_n) const
 	std::ofstream outFile;
 	outFile.open("data.txt");
 	outFile<<"进入Find查找《《《"<<endl;
+	cout<<"进入Find查找《《《"<<endl;
 #endif
 	node * p = head;
 
@@ -120,6 +121,7 @@ node * Astack::find_point(const point & point_n) const
 	}
 #ifdef FindTest
 	outFile<<"退出Find查找》》》0"<<endl;
+	cout<<"退出Find查找》》》0"<<endl;
 #endif
 	return NULL;//返回查询代码0，代表不存在以n为坐标的节点
 }
@@ -130,6 +132,9 @@ node *Astack::get_Fmin()
 	node * p = head , *q = NULL ;
 	while (p)
 	{
+#ifdef TESTMODEL
+		cout<<p->x<<p->y<<"min"<<endl;
+#endif
 		if (p->f <= f)
 		{
 			f = p->f;
@@ -138,7 +143,7 @@ node *Astack::get_Fmin()
 		p = p->next;
 	}
 #ifdef TESTMODEL
-	cout<<"       "<<"min"<< q->x<<","<<q->y<<"f="<<q->f<<endl;
+	//cout<<"       "<<"min"<<endl;
 #endif
 	return q;//返回找到的节点的地址
 }
@@ -148,19 +153,18 @@ int Astack::delete_point(node *node_p)//传入要删除的节点地址
 	//int index = 0;
 	node *tempA = head;//wang：临时变量
 	node * p = head;//
-	if (p->next==NULL)//只有一个节点时
+	if (head->next==NULL)//只有一个节点时
 	{	
-		//p = NULL;//将栈置空
-		//delete p;//wang
-		p = NULL;
+		//p = NULL;//极其错误！！！！！！！！！！！！！！！！
+		head = NULL;
 		return 0;//栈空了
 	}
 	//wang: 保证要删除的点的前节点已知
-	if (p->x==node_p->x && p->y==node_p->y)//第一个节点就是要删除的节点
+	if (head->x==node_p->x && head->y==node_p->y)//第一个节点就是要删除的节点
 	{
 		//next = next->next;//直接指向第二个节点
 		//tempA = p;
-		p = p->next;
+		head = head->next;
 		tempA->next = NULL;
 		//delete tempA;//wang:释放内存
 		return 1;
@@ -213,10 +217,11 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 	node nodenew;
 	node *nodeold = NULL;
 	nodenew.next = NULL;
-	while (p)//进入死循环查找路径
+	while (1)//进入死循环查找路径
 	{
 #ifdef TESTMODEL
-		cout<<"父节点"<<p->x<<","<<p->y<<"进入新的判断"<<endl;
+		//cout<<"父节点"<<p->x<<","<<p->y<<"进入新的判断"<<endl;
+		printf("\n111\n");//Wang
 #endif
 		if (open.find_point(A_map.end)||open.head==NULL)//如果发现终点在开启列表的时候，找到了最短路径
 		{
@@ -232,7 +237,7 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 #ifdef TESTMODEL
 		cout<<"扫描八个方向"<<endl;
 #endif
-		for (int i = 0;i<8;i++)//分别扫描四个方向
+		for (int i = 0;i<4;i++)//分别扫描四个方向
 		{   
 #ifdef TESTMODEL
 			cout<<"i="<<i<<endl;
@@ -245,7 +250,7 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 // 				open.push(A_map.start,A_map.end,n,p);//加入开启列表
 // 			}
 			//cout<<n.x<<","<<n.y<<"  ";
-			if (i >= 4 && ((A_map.map[n.x][p->y] == Obstacle) || (A_map.map[p->x][n.y] == Obstacle)))
+			if (i >= 4 && ((A_map.map[n.x][p->y] == Obstacle) && (A_map.map[p->x][n.y] == Obstacle)))
 			{
 			#ifdef TESTMODEL
 				printf("跳过节点：（%d,%d)，父节点为（%d,%d）\n",n.x,n.y,p->x,p->y);
@@ -307,7 +312,8 @@ int scan(AStarMap & A_map,Astack & open,Astack & close)
 		close.push(p);//将父节点加入到关闭列表中
 		//close.push(A_map.start,A_map.end,n,p);
 	#ifdef TESTMODEL
-		cout<<p->x<<","<<p->y<<"放入close列表"<<endl;
+		//cout<<p->x<<","<<p->y<<"放入close列表"<<endl;
+		printf("\n222\n");//Wang
 	#endif
 		p = open.get_Fmin();//重新得到open列表中F值最低的节点
 	}

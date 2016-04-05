@@ -6,8 +6,8 @@
 #include <fstream>
 #include "AStarMap.h"
 
-//#define TESTMODEL
-//#define FindTest
+#define TESTMODEL
+#define FindTest
 
 using std::cout;
 using std::endl;

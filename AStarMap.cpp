@@ -45,14 +45,18 @@ AStarMap::AStarMap(const int & map_lenx,const int & map_leny,const point & start
 	}
 	if (random != 0)
 	{
-		for (x= Vconst ;x<map_leny-Vconst;x++)//对地图的第零行和最后一行置1，因为是墙壁
+// 		for (x= Vconst ;x<map_leny-Vconst;x++)//对地图的第零行和最后一行置1，因为是墙壁
+// 		{
+// 			map[Vconst-1][x] = Obstacle;
+// 			map[map_lenx-Vconst-1][x] = Obstacle;
+// 		}
+// 		for (y= Vconst; y<map_lenx-Vconst;y++)//对地图的第零列和最后一列置1，因为是墙壁
+// 		{
+// 			map[y][map_leny-Vconst-1] = Obstacle;
+// 		}
+		for (y= 0; y<map_lenx;y++)//对地图的第零列和最后一列置1，因为是墙壁
 		{
-			map[Vconst-1][x] = Obstacle;
-			map[map_lenx-Vconst-1][x] = Obstacle;
-		}
-		for (y= Vconst; y<map_lenx-Vconst;y++)//对地图的第零列和最后一列置1，因为是墙壁
-		{
-			map[y][map_leny-Vconst-1] = Obstacle;
+			map[y][2] = Obstacle;
 		}
 	}
 
